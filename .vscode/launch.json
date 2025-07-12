@@ -7,8 +7,12 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Open index.html",
-            "file": "C:\\Chore Tracker\\GitRepos\\chore-tracker\\public\\index.html"
+            "name": "Launch React App",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}/src"
         }
-    ]
+    ],
+    "scripts": {
+        "start": "npm start"
+    }
 }
