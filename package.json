@@ -5,7 +5,9 @@
   "homepage": "https://GitHubNomad.github.io/chore-tracker",
   "dependencies": {
     "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
     "react-scripts": "5.0.1"
   },
   "scripts": {
