@@ -9,10 +9,8 @@
             "request": "launch",
             "name": "Launch React App",
             "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}/src"
+            "webRoot": "${workspaceFolder}/src",
+            "runtimeExecutable": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
         }
-    ],
-    "scripts": {
-        "start": "npm start"
-    }
+    ]
 }
