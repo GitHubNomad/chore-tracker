@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 const chores = [
     { name: "Make the bed", category: "Easy", notes: "Basic straightening, not perfect", tickets: 1 },
@@ -80,14 +80,14 @@ function VirtualStore({ availableTickets, onPurchase, onBack }) {
         <div className="p-6">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">🎁 Virtual Store</h1>
-                <button
+                <button 
                     className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
                     onClick={onBack}
                 >
                     ← Back to Chores
                 </button>
             </div>
-
+            
             <div className="bg-blue-100 p-4 rounded-lg mb-6">
                 <p className="text-xl font-semibold">Your Available Tickets: 🎟️ {availableTickets}</p>
             </div>
@@ -96,10 +96,11 @@ function VirtualStore({ availableTickets, onPurchase, onBack }) {
                 {storeItems.map((item) => (
                     <div
                         key={item.id}
-                        className={`rounded-xl shadow-lg p-6 border-2 transition-all duration-200 hover:shadow-xl ${item.cost <= availableTickets
-                                ? 'border-green-300 bg-white hover:bg-green-50 cursor-pointer'
+                        className={`rounded-xl shadow-lg p-6 border-2 transition-all duration-200 hover:shadow-xl ${
+                            item.cost <= availableTickets 
+                                ? 'border-green-300 bg-white hover:bg-green-50 cursor-pointer' 
                                 : 'border-gray-300 bg-gray-100 opacity-60'
-                            }`}
+                        }`}
                         onClick={() => handlePurchase(item)}
                     >
                         <div className="text-center">
@@ -123,7 +124,7 @@ function VirtualStore({ availableTickets, onPurchase, onBack }) {
 }
 
 // Main Chore Dashboard Component
-function ChoreDashboard({ onGoToStore }) {
+function ChoreDashboard({ onGoToStore, groupedChores }) {
     const [completed, setCompleted] = useState(() => getFromStorage("completedChores", []));
 
     useEffect(() => {
@@ -154,42 +155,51 @@ function ChoreDashboard({ onGoToStore }) {
             <p className="mb-4 text-xl">Total Tickets Earned: <strong className="text-green-600">🎟️ {totalTickets}</strong></p>
 
             <div className="flex gap-4 mb-6">
-                <button
+                <button 
                     className="bg-purple-500 text-white px-6 py-3 rounded-lg hover:bg-purple-600 font-semibold"
                     onClick={onGoToStore}
                 >
                     🛍️ Visit Store
                 </button>
-                <button
-                    className="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 font-semibold"
+                <button 
+                    className="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 font-semibold" 
                     onClick={resetWeek}
                 >
                     🔄 Reset Week
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {chores.map((chore) => (
-                    <div
-                        key={chore.name}
-                        className={`rounded-xl shadow-lg p-4 cursor-pointer transition-all duration-200 hover:shadow-xl ${categoryColors[chore.category]
-                            } ${completed.includes(chore.name) ? "opacity-50 border-4 border-green-400" : "hover:scale-105"}`}
-                        onClick={() => toggleChore(chore)}
-                    >
-                        <div className="flex justify-between items-start mb-2">
-                            <h2 className="text-xl font-semibold">{chore.name}</h2>
-                            {completed.includes(chore.name) && <span className="text-2xl">✅</span>}
-                        </div>
-                        <p className="text-sm italic mb-3">{chore.notes}</p>
-                        <div className="flex justify-between items-center">
-                            <span className="px-2 py-1 rounded-full text-xs font-semibold bg-white">
-                                {chore.category}
-                            </span>
-                            <span className="text-lg font-bold">🎟️ {chore.tickets}</span>
-                        </div>
+            {/* Organized by Difficulty Level */}
+            {Object.entries(groupedChores).map(([difficulty, choresList]) => (
+                <div key={difficulty} className="mb-8">
+                    <h2 className="text-2xl font-bold mb-4 text-gray-700">
+                        {difficulty} Chores ({choresList.length})
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        {choresList.map((chore) => (
+                            <div
+                                key={chore.name}
+                                className={`rounded-xl shadow-lg p-4 cursor-pointer transition-all duration-200 hover:shadow-xl ${
+                                    categoryColors[chore.category]
+                                } ${completed.includes(chore.name) ? "opacity-50 border-4 border-green-400" : "hover:scale-105"}`}
+                                onClick={() => toggleChore(chore)}
+                            >
+                                <div className="flex justify-between items-start mb-2">
+                                    <h3 className="text-lg font-semibold">{chore.name}</h3>
+                                    {completed.includes(chore.name) && <span className="text-2xl">✅</span>}
+                                </div>
+                                <p className="text-sm italic mb-3 text-gray-600">{chore.notes}</p>
+                                <div className="flex justify-between items-center">
+                                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-white shadow">
+                                        {chore.category}
+                                    </span>
+                                    <span className="text-xl font-bold text-blue-600">🎟️ {chore.tickets}</span>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
+                </div>
+            ))}
         </div>
     );
 }
@@ -226,13 +236,20 @@ export default function App() {
         setCurrentPage('chores');
     };
 
+    // Group chores by difficulty for better organization
+    const groupedChores = {
+        Easy: chores.filter(chore => chore.category === 'Easy'),
+        Medium: chores.filter(chore => chore.category === 'Medium'),
+        Hard: chores.filter(chore => chore.category === 'Hard')
+    };
+
     return (
         <div className="min-h-screen bg-gray-50">
             {currentPage === 'chores' ? (
-                <ChoreDashboard onGoToStore={goToStore} />
+                <ChoreDashboard onGoToStore={goToStore} groupedChores={groupedChores} />
             ) : (
-                <VirtualStore
-                    availableTickets={availableTickets}
+                <VirtualStore 
+                    availableTickets={availableTickets} 
                     onPurchase={handlePurchase}
                     onBack={goToChores}
                 />
