@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/main.035b4f32.css","mappings":"AACA,KAIE,wBAAyB,CAHzB,sBAAuB,CACvB,QAAS,CACT,SAEF","sources":["index.css"],"sourcesContent":["\nbody {\n  font-family: sans-serif;\n  margin: 0;\n  padding: 0;\n  background-color: #f8f9fa;\n}\n"],"names":[],"sourceRoot":""}
