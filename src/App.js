@@ -47,22 +47,22 @@ const achievements = [
 
 const categoryColors = {
     Easy: {
-        bg: "bg-emerald-50",
-        border: "border-emerald-200",
-        text: "text-emerald-800",
-        badge: "bg-emerald-100 text-emerald-700"
+        bg: "bg-green-50",
+        border: "border-green-200",
+        text: "text-green-800",
+        accent: "bg-green-500"
     },
     Medium: {
-        bg: "bg-amber-50",
-        border: "border-amber-200",
-        text: "text-amber-800",
-        badge: "bg-amber-100 text-amber-700"
+        bg: "bg-yellow-50",
+        border: "border-yellow-200", 
+        text: "text-yellow-800",
+        accent: "bg-yellow-500"
     },
     Hard: {
-        bg: "bg-rose-50",
-        border: "border-rose-200",
-        text: "text-rose-800",
-        badge: "bg-rose-100 text-rose-700"
+        bg: "bg-orange-50",
+        border: "border-orange-200",
+        text: "text-orange-800", 
+        accent: "bg-orange-500"
     }
 };
 
@@ -95,17 +95,17 @@ class StorageManager {
 
 // Custom hook for managing app state
 function useAppState() {
-    const [currentPage, setCurrentPage] = useState('chores');
-    const [completedChores, setCompletedChores] = useState(() =>
+    const [currentPage, setCurrentPage] = useState('dashboard');
+    const [completedChores, setCompletedChores] = useState(() => 
         StorageManager.get("completedChores", [])
     );
-    const [ticketsRedeemed, setTicketsRedeemed] = useState(() =>
+    const [ticketsRedeemed, setTicketsRedeemed] = useState(() => 
         StorageManager.get("redeemedTickets", 0)
     );
-    const [completionHistory, setCompletionHistory] = useState(() =>
+    const [completionHistory, setCompletionHistory] = useState(() => 
         StorageManager.get("completionHistory", {})
     );
-    const [unlockedAchievements, setUnlockedAchievements] = useState(() =>
+    const [unlockedAchievements, setUnlockedAchievements] = useState(() => 
         StorageManager.get("unlockedAchievements", [])
     );
 
@@ -125,7 +125,7 @@ function useAppState() {
         StorageManager.set("unlockedAchievements", unlockedAchievements);
     }, [unlockedAchievements]);
 
-    const ticketsEarned = useMemo(() =>
+    const ticketsEarned = useMemo(() => 
         chores
             .filter(chore => completedChores.includes(chore.name))
             .reduce((sum, chore) => sum + chore.tickets, 0),
@@ -139,7 +139,7 @@ function useAppState() {
         totalChoresCompleted: completedChores.length,
         totalTicketsEarned: ticketsEarned,
         totalTicketsSpent: ticketsRedeemed,
-        hardChoresCompleted: completedChores.filter(choreName =>
+        hardChoresCompleted: completedChores.filter(choreName => 
             chores.find(c => c.name === choreName)?.category === 'Hard'
         ).length,
         weeklyGoalProgress: Math.round((completedChores.length / 15) * 100)
@@ -152,7 +152,7 @@ function useAppState() {
     }), []);
 
     const toggleChore = useCallback((chore) => {
-        setCompletedChores(prev =>
+        setCompletedChores(prev => 
             prev.includes(chore.name)
                 ? prev.filter(name => name !== chore.name)
                 : [...prev, chore.name]
@@ -172,7 +172,7 @@ function useAppState() {
     }, []);
 
     const unlockAchievement = useCallback((achievementId) => {
-        setUnlockedAchievements(prev =>
+        setUnlockedAchievements(prev => 
             prev.includes(achievementId) ? prev : [...prev, achievementId]
         );
     }, []);
@@ -222,129 +222,234 @@ function useAchievementChecker(stats, unlockedAchievements, unlockAchievement) {
     }, [stats, unlockedAchievements, unlockAchievement]);
 }
 
-// Mobile-optimized Achievement Component
-function MobileAchievements({ stats, unlockedAchievements }) {
+// Navigation Component
+function Navigation({ currentPage, onPageChange }) {
+    const navItems = [
+        { id: 'dashboard', label: 'Dashboard', icon: '🏠' },
+        { id: 'chores', label: 'Chores', icon: '✅' },
+        { id: 'rewards', label: 'Rewards', icon: '🎁' },
+        { id: 'progress', label: 'Progress', icon: '📊' }
+    ];
+
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-3">🏅 Achievements</h3>
-            <div className="flex overflow-x-auto gap-3 pb-2 -mx-4 px-4">
-                {achievements.map((achievement) => {
-                    const isUnlocked = unlockedAchievements.includes(achievement.id);
-                    return (
-                        <div
-                            key={achievement.id}
-                            className={`flex-shrink-0 w-16 h-16 rounded-lg flex flex-col items-center justify-center transition-all ${isUnlocked
-                                    ? 'bg-yellow-100 border-2 border-yellow-300'
-                                    : 'bg-gray-100 border border-gray-200 opacity-60'
+        <nav className="bg-white border-b border-gray-200 shadow-sm">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-between h-16">
+                    <div className="flex items-center">
+                        <h1 className="text-xl font-semibold text-gray-900">Family Chore Tracker</h1>
+                    </div>
+                    <div className="flex space-x-8">
+                        {navItems.map((item) => (
+                            <button
+                                key={item.id}
+                                onClick={() => onPageChange(item.id)}
+                                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors duration-200 ${
+                                    currentPage === item.id
+                                        ? 'border-blue-500 text-gray-900'
+                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                 }`}
-                            title={achievement.description}
-                        >
-                            <div className="text-xl">{achievement.icon}</div>
-                            <div className="text-xs font-medium text-gray-700 text-center leading-tight mt-1">
-                                {achievement.name.split(' ')[0]}
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
-        </div>
-    );
-}
-
-// Mobile-optimized Stats Component
-function MobileStats({ stats }) {
-    return (
-        <div className="grid grid-cols-2 gap-3 mb-6">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                <div className="text-2xl font-bold text-blue-600">{stats.currentStreak}</div>
-                <div className="text-xs text-gray-600">Day Streak 🔥</div>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                <div className="text-2xl font-bold text-green-600">{stats.totalChoresCompleted}</div>
-                <div className="text-xs text-gray-600">Total Chores ✅</div>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                <div className="text-2xl font-bold text-purple-600">{stats.totalTicketsEarned}</div>
-                <div className="text-xs text-gray-600">Tickets Earned 🎟️</div>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                <div className="text-2xl font-bold text-orange-600">{stats.weeklyGoalProgress}%</div>
-                <div className="text-xs text-gray-600">Weekly Goal 📊</div>
-            </div>
-        </div>
-    );
-}
-
-// Mobile-optimized Weekly Goals
-function MobileWeeklyGoals({ weeklyGoal, currentProgress }) {
-    const progressPercentage = weeklyGoal > 0 ? (currentProgress / weeklyGoal) * 100 : 0;
-
-    return (
-        <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg p-4 mb-6 text-white">
-            <div className="flex justify-between items-center mb-3">
-                <h3 className="text-lg font-bold">🎯 Weekly Goal</h3>
-                <div className="text-right">
-                    <div className="text-xl font-bold">{currentProgress}/{weeklyGoal}</div>
-                    <div className="text-blue-100 text-xs">chores completed</div>
+                            >
+                                <span className="mr-2">{item.icon}</span>
+                                <span className="hidden sm:inline">{item.label}</span>
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
-            <div className="w-full bg-blue-300 rounded-full h-2 mb-2">
-                <div
-                    className="bg-white h-2 rounded-full transition-all duration-500"
-                    style={{ width: `${Math.min(progressPercentage, 100)}%` }}
-                ></div>
-            </div>
-            <div className="text-blue-100 text-sm">
-                {progressPercentage >= 100 ? "🎉 Goal achieved! Amazing work!" : `${Math.round(progressPercentage)}% complete`}
-            </div>
-        </div>
+        </nav>
     );
 }
 
-// Mobile Navigation Component
-function MobileNav({ currentPage, availableTickets, onNavigate }) {
+// Dashboard Overview Component
+function Dashboard({ stats, completedChores, groupedChores, onPageChange }) {
+    const totalChores = chores.length;
+    const completedCount = completedChores.length;
+    const progressPercentage = totalChores > 0 ? (completedCount / totalChores) * 100 : 0;
+
     return (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 z-10">
-            <div className="flex justify-around items-center">
-                <button
-                    onClick={() => onNavigate('chores')}
-                    className={`flex flex-col items-center py-2 px-4 rounded-lg transition-colors ${currentPage === 'chores'
-                            ? 'bg-blue-100 text-blue-600'
-                            : 'text-gray-500'
-                        }`}
-                >
-                    <span className="text-lg">✅</span>
-                    <span className="text-xs font-medium">Chores</span>
-                </button>
-                <button
-                    onClick={() => onNavigate('store')}
-                    className={`flex flex-col items-center py-2 px-4 rounded-lg transition-colors relative ${currentPage === 'store'
-                            ? 'bg-purple-100 text-purple-600'
-                            : 'text-gray-500'
-                        }`}
-                >
-                    <span className="text-lg">🛒</span>
-                    <span className="text-xs font-medium">Store</span>
-                    {availableTickets > 0 && (
-                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                            {availableTickets > 9 ? '9+' : availableTickets}
-                        </span>
-                    )}
-                </button>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="mb-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Family Dashboard</h2>
+                <p className="text-gray-600">Overview of family chore progress and achievements</p>
+            </div>
+
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="flex items-center">
+                        <div className="p-2 bg-blue-100 rounded-lg">
+                            <span className="text-2xl">🎟️</span>
+                        </div>
+                        <div className="ml-4">
+                            <p className="text-sm font-medium text-gray-600">Total Tickets</p>
+                            <p className="text-2xl font-semibold text-gray-900">{stats.totalTicketsEarned}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="flex items-center">
+                        <div className="p-2 bg-green-100 rounded-lg">
+                            <span className="text-2xl">✅</span>
+                        </div>
+                        <div className="ml-4">
+                            <p className="text-sm font-medium text-gray-600">Chores Done</p>
+                            <p className="text-2xl font-semibold text-gray-900">{completedCount}/{totalChores}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="flex items-center">
+                        <div className="p-2 bg-orange-100 rounded-lg">
+                            <span className="text-2xl">🔥</span>
+                        </div>
+                        <div className="ml-4">
+                            <p className="text-sm font-medium text-gray-600">Day Streak</p>
+                            <p className="text-2xl font-semibold text-gray-900">{stats.currentStreak}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div className="flex items-center">
+                        <div className="p-2 bg-purple-100 rounded-lg">
+                            <span className="text-2xl">🎯</span>
+                        </div>
+                        <div className="ml-4">
+                            <p className="text-sm font-medium text-gray-600">Weekly Goal</p>
+                            <p className="text-2xl font-semibold text-gray-900">{stats.weeklyGoalProgress}%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Progress Overview */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Overall Progress</h3>
+                <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
+                    <div 
+                        className="bg-blue-500 h-3 rounded-full transition-all duration-300"
+                        style={{ width: `${progressPercentage}%` }}
+                    ></div>
+                </div>
+                <p className="text-sm text-gray-600">{Math.round(progressPercentage)}% of chores completed this week</p>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
+                     onClick={() => onPageChange('chores')}>
+                    <div className="text-center">
+                        <span className="text-4xl mb-3 block">✅</span>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">View Chores</h3>
+                        <p className="text-sm text-gray-600">See all available chores and mark them complete</p>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
+                     onClick={() => onPageChange('rewards')}>
+                    <div className="text-center">
+                        <span className="text-4xl mb-3 block">🎁</span>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">Redeem Rewards</h3>
+                        <p className="text-sm text-gray-600">Spend your earned tickets on fun rewards</p>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
+                     onClick={() => onPageChange('progress')}>
+                    <div className="text-center">
+                        <span className="text-4xl mb-3 block">📊</span>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">View Progress</h3>
+                        <p className="text-sm text-gray-600">Track achievements and see detailed statistics</p>
+                    </div>
+                </div>
             </div>
         </div>
     );
 }
 
-// Mobile Store Component
-function MobileStore({ availableTickets, onPurchase, onBack }) {
+// Chores List Component
+function ChoresList({ completedChores, groupedChores, onToggleChore, onReset }) {
+    return (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="flex justify-between items-center mb-8">
+                <div>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Family Chores</h2>
+                    <p className="text-gray-600">Click on chores to mark them as complete</p>
+                </div>
+                <button 
+                    onClick={onReset}
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                >
+                    Reset Week
+                </button>
+            </div>
+
+            {Object.entries(groupedChores).map(([difficulty, choresList]) => {
+                const colors = categoryColors[difficulty];
+                const completedInCategory = choresList.filter(chore => completedChores.includes(chore.name)).length;
+                
+                return (
+                    <div key={difficulty} className="mb-8">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-xl font-semibold text-gray-900">{difficulty} Chores</h3>
+                            <span className="text-sm text-gray-600">{completedInCategory}/{choresList.length} completed</span>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {choresList.map((chore) => {
+                                const isCompleted = completedChores.includes(chore.name);
+                                return (
+                                    <div
+                                        key={chore.name}
+                                        className={`${colors.bg} ${colors.border} border-2 rounded-lg p-4 cursor-pointer transition-all duration-200 hover:shadow-md ${
+                                            isCompleted 
+                                                ? "opacity-75 bg-green-50 border-green-300" 
+                                                : "hover:border-blue-400 hover:shadow-lg"
+                                        }`}
+                                        onClick={() => onToggleChore(chore)}
+                                    >
+                                        <div className="flex items-start justify-between mb-3">
+                                            <h4 className={`font-semibold ${colors.text} flex-1 pr-2`}>
+                                                {chore.name}
+                                            </h4>
+                                            <div className="flex items-center space-x-2">
+                                                <div className="flex items-center bg-white px-2 py-1 rounded text-sm font-medium">
+                                                    <span className="mr-1">🎟️</span>
+                                                    {chore.tickets}
+                                                </div>
+                                                {isCompleted && <span className="text-green-500 text-xl">✓</span>}
+                                            </div>
+                                        </div>
+                                        
+                                        <p className="text-sm text-gray-600 mb-3 italic">
+                                            {chore.notes}
+                                        </p>
+                                        
+                                        <div className="flex items-center justify-between">
+                                            <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium text-white ${colors.accent}`}>
+                                                {chore.category}
+                                            </span>
+                                            <span className="text-xs text-gray-500 capitalize">{chore.recurring}</span>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+
+// Rewards Store Component
+function RewardsStore({ availableTickets, onPurchase }) {
     const handlePurchase = (item) => {
         if (item.cost <= availableTickets) {
             if (window.confirm(`Are you sure you want to redeem "${item.name}" for ${item.cost} tickets?`)) {
-                const success = onPurchase(item.cost);
-                if (success) {
-                    setTimeout(() => onBack(), 1000);
-                }
+                onPurchase(item.cost);
             }
         } else {
             alert(`You need ${item.cost - availableTickets} more tickets to get this reward!`);
@@ -352,51 +457,48 @@ function MobileStore({ availableTickets, onPurchase, onBack }) {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 pb-20">
-            {/* Header */}
-            <div className="sticky top-0 bg-white shadow-sm border-b border-gray-200 p-4 z-10">
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">🎁 Virtual Store</h1>
-                <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-3 text-white">
-                    <div className="text-center">
-                        <p className="text-blue-100 text-sm mb-1">Available Tickets</p>
-                        <div className="text-2xl font-bold">🎟️ {availableTickets}</div>
-                    </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="mb-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Reward Store</h2>
+                <p className="text-gray-600">Spend your earned tickets on fun rewards!</p>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
+                <div className="text-center">
+                    <p className="text-sm text-blue-600 mb-1">Available Tickets</p>
+                    <p className="text-3xl font-bold text-blue-700">🎟️ {availableTickets}</p>
                 </div>
             </div>
 
-            {/* Store Items */}
-            <div className="p-4 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {storeItems.map((item) => {
                     const canAfford = item.cost <= availableTickets;
                     return (
                         <div
                             key={item.id}
-                            className={`bg-white rounded-xl shadow-sm border-2 p-4 transition-all duration-200 ${canAfford
-                                    ? 'border-green-200 active:bg-green-50 cursor-pointer'
+                            className={`bg-white rounded-lg shadow-sm border-2 p-6 transition-all duration-200 ${
+                                canAfford 
+                                    ? 'border-green-200 hover:border-green-300 hover:shadow-md cursor-pointer' 
                                     : 'border-gray-200 opacity-60 cursor-not-allowed'
-                                }`}
+                            }`}
                             onClick={() => canAfford && handlePurchase(item)}
                         >
-                            <div className="flex items-center space-x-4">
-                                <div className="text-4xl flex-shrink-0">{item.emoji}</div>
-                                <div className="flex-1 min-w-0">
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-1 line-clamp-2">
-                                        {item.name}
-                                    </h3>
-                                    <span className="inline-block bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs font-medium">
-                                        {item.category}
-                                    </span>
+                            <div className="text-center">
+                                <div className="text-5xl mb-4">{item.emoji}</div>
+                                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                                    {item.name}
+                                </h3>
+                                <span className="inline-block bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm font-medium mb-4">
+                                    {item.category}
+                                </span>
+                                <div className={`text-2xl font-bold mb-3 ${canAfford ? 'text-green-600' : 'text-gray-400'}`}>
+                                    🎟️ {item.cost}
                                 </div>
-                                <div className="text-right flex-shrink-0">
-                                    <div className={`text-xl font-bold ${canAfford ? 'text-green-600' : 'text-gray-400'}`}>
-                                        🎟️ {item.cost}
-                                    </div>
-                                    {!canAfford && (
-                                        <p className="text-red-500 text-xs mt-1">
-                                            Need {item.cost - availableTickets} more
-                                        </p>
-                                    )}
-                                </div>
+                                {!canAfford && (
+                                    <p className="text-red-500 text-sm font-medium">
+                                        Need {item.cost - availableTickets} more tickets
+                                    </p>
+                                )}
                             </div>
                         </div>
                     );
@@ -406,120 +508,83 @@ function MobileStore({ availableTickets, onPurchase, onBack }) {
     );
 }
 
-// Mobile Dashboard Component
-function MobileDashboard({
-    completedChores,
-    groupedChores,
-    stats,
-    unlockedAchievements,
-    ticketsEarned,
-    onToggleChore,
-    onResetWeek
-}) {
-    const totalChores = chores.length;
-    const completedCount = completedChores.length;
-    const progressPercentage = totalChores > 0 ? (completedCount / totalChores) * 100 : 0;
-
-    const handleReset = () => {
-        if (window.confirm("Are you sure you want to reset all chores for the week?")) {
-            onResetWeek();
-        }
-    };
-
+// Progress Tracking Component
+function ProgressTracking({ stats, unlockedAchievements }) {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 pb-20 flex justify-center">
-            <div className="w-full max-w-4xl">
-                {/* Header */}
-                <div className="sticky top-0 bg-white shadow-sm border-b border-gray-200 p-4 z-10">
-                    <div className="flex justify-between items-center mb-3">
-                        <h1 className="text-2xl font-bold text-gray-900">🏆 Chore Tracker</h1>
-                        <button
-                            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
-                            onClick={handleReset}
-                        >
-                            🔄 Reset
-                        </button>
-                    </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="mb-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Progress & Achievements</h2>
+                <p className="text-gray-600">Track your family's accomplishments and milestones</p>
+            </div>
 
-                    {/* Progress */}
-                    <div className="mb-3">
-                        <div className="flex justify-between items-center mb-2">
-                            <span className="text-sm font-medium text-gray-700">
-                                {completedCount}/{totalChores} completed
-                            </span>
-                            <span className="text-sm text-gray-500">{Math.round(progressPercentage)}%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                                className="bg-gradient-to-r from-green-400 to-blue-500 h-2 rounded-full transition-all duration-500"
-                                style={{ width: `${progressPercentage}%` }}
-                            ></div>
-                        </div>
-                    </div>
-
-                    {/* Tickets */}
-                    <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-3 rounded-lg">
-                        <p className="text-green-100 text-sm mb-1">Total Tickets Earned</p>
-                        <p className="text-xl font-bold">🎟️ {ticketsEarned}</p>
-                    </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-4">
-                    <MobileStats stats={stats} />
-                    <MobileWeeklyGoals weeklyGoal={15} currentProgress={completedCount} />
-                    <MobileAchievements stats={stats} unlockedAchievements={unlockedAchievements} />
-
-                    {/* Chores */}
-                    {Object.entries(groupedChores).map(([difficulty, choresList]) => {
-                        const colors = categoryColors[difficulty];
-                        const completedInCategory = choresList.filter(chore => completedChores.includes(chore.name)).length;
-
+            {/* Achievement Badges */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Achievements</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
+                    {achievements.map((achievement) => {
+                        const isUnlocked = unlockedAchievements.includes(achievement.id);
                         return (
-                            <div key={difficulty} className="mb-6">
-                                <div className="flex items-center justify-between mb-4">
-                                    <h2 className="text-xl font-bold text-gray-800">{difficulty} Chores</h2>
-                                    <div className={`px-3 py-1 rounded-full ${colors.badge} text-sm font-semibold`}>
-                                        {completedInCategory}/{choresList.length}
-                                    </div>
-                                </div>
-
-                                <div className="space-y-3">
-                                    {choresList.map((chore) => {
-                                        const isCompleted = completedChores.includes(chore.name);
-                                        return (
-                                            <div
-                                                key={chore.name}
-                                                className={`${colors.bg} ${colors.border} border-2 rounded-xl shadow-sm p-4 transition-all duration-200 cursor-pointer ${isCompleted
-                                                        ? "opacity-75 border-green-400 bg-green-50"
-                                                        : "hover:border-blue-400 hover:bg-blue-50 hover:shadow-md hover:scale-[1.02] active:scale-95"
-                                                    }`}
-                                                onClick={() => onToggleChore(chore)}
-                                            >
-                                                <div className="flex items-start justify-between mb-3">
-                                                    <h3 className={`text-lg font-semibold ${colors.text} flex-1 pr-3`}>
-                                                        {chore.name}
-                                                    </h3>
-                                                    <div className="flex items-center space-x-2 flex-shrink-0">
-                                                        <span className="text-lg font-bold text-blue-600">🎟️ {chore.tickets}</span>
-                                                        {isCompleted && <span className="text-2xl">✅</span>}
-                                                    </div>
-                                                </div>
-
-                                                <p className="text-sm text-gray-600 mb-3 italic leading-relaxed">
-                                                    {chore.notes}
-                                                </p>
-
-                                                <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${colors.badge}`}>
-                                                    {chore.category}
-                                                </span>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
+                            <div
+                                key={achievement.id}
+                                className={`p-4 rounded-lg text-center transition-all ${
+                                    isUnlocked 
+                                        ? 'bg-yellow-50 border-2 border-yellow-300' 
+                                        : 'bg-gray-50 border border-gray-200 opacity-60'
+                                }`}
+                                title={achievement.description}
+                            >
+                                <div className="text-3xl mb-2">{achievement.icon}</div>
+                                <div className="text-sm font-medium text-gray-700">{achievement.name}</div>
                             </div>
                         );
                     })}
+                </div>
+            </div>
+
+            {/* Detailed Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Weekly Statistics</h3>
+                    <div className="space-y-4">
+                        <div className="flex justify-between">
+                            <span className="text-gray-600">Chores Completed</span>
+                            <span className="font-semibold">{stats.totalChoresCompleted}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-gray-600">Tickets Earned</span>
+                            <span className="font-semibold">{stats.totalTicketsEarned}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-gray-600">Current Streak</span>
+                            <span className="font-semibold">{stats.currentStreak} days</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-gray-600">Hard Chores Done</span>
+                            <span className="font-semibold">{stats.hardChoresCompleted}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Weekly Goal Progress</h3>
+                    <div className="mb-4">
+                        <div className="flex justify-between text-sm text-gray-600 mb-2">
+                            <span>Progress</span>
+                            <span>{stats.weeklyGoalProgress}%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-4">
+                            <div 
+                                className="bg-blue-500 h-4 rounded-full transition-all duration-300"
+                                style={{ width: `${Math.min(stats.weeklyGoalProgress, 100)}%` }}
+                            ></div>
+                        </div>
+                    </div>
+                    <p className="text-sm text-gray-600">
+                        {stats.weeklyGoalProgress >= 100 
+                            ? "Congratulations! You've reached your weekly goal!" 
+                            : `Keep going! You're ${100 - stats.weeklyGoalProgress}% away from your goal.`
+                        }
+                    </p>
                 </div>
             </div>
         </div>
@@ -529,36 +594,66 @@ function MobileDashboard({
 // Main App Component
 export default function App() {
     const appState = useAppState();
-
+    
     useAchievementChecker(appState.stats, appState.unlockedAchievements, appState.unlockAchievement);
 
-    const handleNavigate = (page) => appState.setCurrentPage(page);
+    const handleReset = () => {
+        if (window.confirm("Are you sure you want to reset all chores for the week?")) {
+            appState.resetWeek();
+        }
+    };
 
-    return (
-        <div className="min-h-screen relative">
-            {appState.currentPage === 'chores' ? (
-                <MobileDashboard
+    const renderCurrentPage = () => {
+        switch (appState.currentPage) {
+            case 'dashboard':
+                return (
+                    <Dashboard 
+                        stats={appState.stats}
+                        completedChores={appState.completedChores}
+                        groupedChores={appState.groupedChores}
+                        onPageChange={appState.setCurrentPage}
+                    />
+                );
+            case 'chores':
+                return (
+                    <ChoresList
+                        completedChores={appState.completedChores}
+                        groupedChores={appState.groupedChores}
+                        onToggleChore={appState.toggleChore}
+                        onReset={handleReset}
+                    />
+                );
+            case 'rewards':
+                return (
+                    <RewardsStore
+                        availableTickets={appState.availableTickets}
+                        onPurchase={appState.purchaseItem}
+                    />
+                );
+            case 'progress':
+                return (
+                    <ProgressTracking
+                        stats={appState.stats}
+                        unlockedAchievements={appState.unlockedAchievements}
+                    />
+                );
+            default:
+                return <Dashboard 
+                    stats={appState.stats}
                     completedChores={appState.completedChores}
                     groupedChores={appState.groupedChores}
-                    stats={appState.stats}
-                    unlockedAchievements={appState.unlockedAchievements}
-                    ticketsEarned={appState.ticketsEarned}
-                    onToggleChore={appState.toggleChore}
-                    onResetWeek={appState.resetWeek}
-                />
-            ) : (
-                <MobileStore
-                    availableTickets={appState.availableTickets}
-                    onPurchase={appState.purchaseItem}
-                    onBack={() => handleNavigate('chores')}
-                />
-            )}
+                    onPageChange={appState.setCurrentPage}
+                />;
+        }
+    };
 
-            <MobileNav
-                currentPage={appState.currentPage}
-                availableTickets={appState.availableTickets}
-                onNavigate={handleNavigate}
+    return (
+        <div className="min-h-screen bg-gray-50">
+            <Navigation 
+                currentPage={appState.currentPage} 
+                onPageChange={appState.setCurrentPage} 
             />
+            {renderCurrentPage()}
         </div>
     );
 }
