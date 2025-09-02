@@ -267,7 +267,7 @@ function Dashboard({ stats, completedChores, groupedChores, onPageChange }) {
     const progressPercentage = totalChores > 0 ? (completedCount / totalChores) * 100 : 0;
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Family Dashboard</h2>
                 <p className="text-gray-600">Overview of family chore progress and achievements</p>
@@ -372,7 +372,7 @@ function Dashboard({ stats, completedChores, groupedChores, onPageChange }) {
 // Chores List Component
 function ChoresList({ completedChores, groupedChores, onToggleChore, onReset }) {
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="flex justify-between items-center mb-8">
                 <div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">Family Chores</h2>
@@ -457,7 +457,7 @@ function RewardsStore({ availableTickets, onPurchase }) {
     };
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Reward Store</h2>
                 <p className="text-gray-600">Spend your earned tickets on fun rewards!</p>
