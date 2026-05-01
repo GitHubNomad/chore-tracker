@@ -1,215 +1,122 @@
-# 🏆 Kids Chore Tracker with Virtual Store
+# Family Chore Tracker
 
-An interactive React-based chore tracking system designed for kids to learn responsibility, time management, and money skills through a fun ticket-based reward system.
+An interactive React app for kids to track chores, earn tickets, and redeem rewards. Installable as a PWA on any device.
 
-## ✨ Features
+## Features
 
-### 🧹 Chore Management
-- **18 age-appropriate chores** categorized by difficulty (Easy, Medium, Hard)
-- **Color-coded system** - Green (Easy), Yellow (Medium), Red (Hard)
-- **Interactive completion** - Tap/click to mark chores as done
-- **Visual feedback** with checkmarks and opacity changes
+### Chore Management
 
-### 🎟️ Ticket System
-- **Earn tickets** by completing chores (1-4 tickets per chore)
-- **Track progress** with real-time ticket totals
-- **Safe spending** - tickets only deducted when items are purchased
+- 18 age-appropriate chores categorized by difficulty (Easy / Medium / Hard)
+- Color-coded cards — Green (Easy), Yellow (Medium), Orange (Hard)
+- Tap to mark complete; tap again to undo
+- Weekly reset clears checkmarks without touching the ticket balance
 
-### 🛍️ Virtual Store
-- **10 different rewards** ranging from screen time to special outings
-- **Smart affordability indicators** - shows what's available vs needs more tickets
-- **Confirmation system** to prevent accidental purchases
-- **Automatic navigation** back to main page after purchase
+### Ticket System
 
-### 💾 Data Persistence
-- **Local storage** saves progress between sessions
-- **Safe implementation** works on all devices including Raspberry Pi
-- **Weekly reset** option to start fresh
+- Completing a chore immediately banks its tickets (1–4 per chore)
+- Tickets persist across weekly resets — kids never lose what they've earned
+- Unchecking a chore refunds its tickets
 
-## 🎯 Chore Categories & Tickets
+### Streak Tracking
 
-### Easy Chores (1 ticket each)
-- Make the bed
-- Feed pets
-- Put dirty clothes in hamper
-- Pick up toys
-- Wipe down table after meals
-- And more...
+- Tracks real consecutive days where at least one chore was completed
+- Streak survives page reloads and weekly resets
+- Today counts the moment the first chore of the day is checked off
 
-### Medium Chores (2 tickets each)
-- Fold laundry
-- Wash dishes
-- Put away clean clothes
-- Help pack lunch
-- Keep closet clean
-- And more...
+### Virtual Store
 
-### Hard Chores (4 tickets each)
-- Take trash to outdoor bin
-- Assist in washing car
-- Cook simple meals
+- 10 rewards ranging from screen time to sleepovers
+- Grayed-out items show exactly how many more tickets are needed
+- Confirmation dialog prevents accidental purchases
 
-## 🎁 Virtual Store Rewards
+### Achievements
 
-| Reward | Cost | Category |
-|--------|------|----------|
-| 30 minutes extra screen time | 6 tickets | Fun Time |
-| Choose tonight's movie | 5 tickets | Entertainment |
-| Stay up 30 minutes later | 8 tickets | Special Privilege |
-| Small toy or book | 12 tickets | Physical Reward |
-| Trip to the park with snack | 10 tickets | Outing |
-| Ice cream treat | 7 tickets | Treat |
-| Friend sleepover | 20 tickets | Big Reward |
-| Choose what's for dinner | 4 tickets | Choice |
-| $5 cash | 20 tickets | Money |
-| Art supplies | 15 tickets | Creative |
+- 8 unlockable badges (first chore, ticket milestones, streak goals, hard chores)
+- Unlocks are permanent and saved to local storage
 
-## 🚀 Quick Start
+### PWA — Installable as an App
 
-### Prerequisites
-- Node.js (v14 or higher)
-- npm or yarn
+- Add to home screen on Android and iOS
+- Installs on Windows/Mac desktop via Chrome or Edge
+- Launches in a standalone window (no browser chrome)
+- Works offline after the first load
 
-### Installation
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/yourusername/chore-tracker.git
-   cd chore-tracker
-   ```
+### Dev Mode
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+- Click the "Family Chore Tracker" title **5 times** within 2 seconds to toggle Dev Mode
+- Shows a red DEV badge in the nav and a banner with a **Reset All Progress** button
+- Clears all chores, tickets, streak history, and achievements
+- Not persisted — closes automatically on page refresh
 
-3. Start the development server:
-   ```bash
-   npm start
-   ```
+## Quick Start
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+**Prerequisites:** Node.js v14+
 
-## 📱 Deployment Options
-
-### GitHub Pages (Recommended)
-1. Add to your `package.json`:
-   ```json
-   "homepage": "https://yourusername.github.io/chore-tracker"
-   ```
-
-2. Install gh-pages:
-   ```bash
-   npm install --save-dev gh-pages
-   ```
-
-3. Add deploy scripts to `package.json`:
-   ```json
-   "scripts": {
-     "predeploy": "npm run build",
-     "deploy": "gh-pages -d build"
-   }
-   ```
-
-4. Deploy:
-   ```bash
-   npm run deploy
-   ```
-
-### Raspberry Pi Setup
-Perfect for a dedicated family display!
-
-1. **Kiosk Mode (Recommended)**:
-   - Deploy to GitHub Pages first
-   - Boot Raspberry Pi with Chromium
-   - Navigate to your GitHub Pages URL
-   - Press F11 for fullscreen
-
-2. **Local Hosting**:
-   ```bash
-   npm run build
-   sudo apt install lighttpd
-   sudo cp -r build/* /var/www/html/
-   ```
-
-## 🎨 Customization
-
-### Adding New Chores
-Edit the `chores` array in `App.js`:
-```javascript
-{ name: "Your new chore", category: "Easy", notes: "Description", tickets: 1 }
+```bash
+git clone https://github.com/GitHubNomad/chore-tracker.git
+cd chore-tracker
+npm install
+npm start
 ```
 
-### Modifying Store Items
-Edit the `storeItems` array in `App.js`:
-```javascript
-{ id: 11, name: "New reward", cost: 5, emoji: "🎉", category: "Fun" }
+Open [http://localhost:3000](http://localhost:3000).
+
+## Deployment
+
+Everything is already configured for GitHub Pages. Just run:
+
+```bash
+npm run deploy
 ```
 
-### Adjusting Ticket Values
-- Easy chores: 1 ticket (good for daily tasks)
-- Medium chores: 2 tickets (weekly tasks)
-- Hard chores: 4 tickets (challenging tasks)
+This builds the app and pushes it to the `gh-pages` branch. The live URL is:
+`https://GitHubNomad.github.io/chore-tracker`
 
-## 💡 Usage Tips
+## Installing as an App
 
-### For Parents
-- **Weekly budget**: ~80 tickets per month = $20 equivalent
-- **Reset weekly** to maintain engagement
-- **Customize rewards** based on your child's interests
-- **Monitor progress** and celebrate achievements
+**Desktop (Chrome / Edge):**
+After opening the app, click the install icon (⊕) in the address bar.
 
-### For Kids
-- **Complete chores** by tapping on them
-- **Watch tickets accumulate** as you work
-- **Visit the store** to see available rewards
-- **Save up** for bigger rewards or spend on smaller treats
+**Android:**
+Open in Chrome → three-dot menu → Add to Home Screen.
 
-## 🛠️ Technical Details
+**iPhone / iPad:**
+Open in Safari → Share button → Add to Home Screen.
 
-### Built With
-- React 18+ with Hooks
-- Tailwind CSS for styling
-- Local Storage for data persistence
-- Responsive design for all screen sizes
+## Customization
 
-### Browser Compatibility
-- Chrome/Chromium (recommended for Raspberry Pi)
-- Firefox
-- Safari
-- Edge
+### Adding a chore
 
-### Performance
-- Lightweight design perfect for Raspberry Pi Zero
-- No external API dependencies
-- Offline functionality after initial load
+Edit the `chores` array in `src/App.js`:
 
-## 🤝 Contributing
+```javascript
+{ name: "Water the plants", category: "Easy", notes: "All indoor pots", tickets: 1, recurring: "daily" }
+```
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test on different devices
-5. Submit a pull request
+`category` must be `"Easy"`, `"Medium"`, or `"Hard"`. `recurring` is `"daily"`, `"weekly"`, or `"monthly"` (display only).
 
-## 📝 License
+### Adding a store reward
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Edit the `storeItems` array in `src/App.js`:
 
-## 🙏 Acknowledgments
+```javascript
+{ id: 11, name: "New reward", cost: 8, emoji: "🎉", category: "Fun" }
+```
 
-- Designed with educational psychology principles in mind
-- Inspired by gamification techniques for positive reinforcement
-- Built for real families by real parents
+### Ticket values
 
-## 📞 Support
+- Easy: 1 ticket
+- Medium: 2 tickets
+- Hard: 4 tickets
 
-If you encounter any issues or have questions:
-1. Check the GitHub Issues page
-2. Create a new issue with detailed description
-3. Include screenshots if helpful
+## Tech Stack
 
----
+- React 18 with hooks
+- Tailwind CSS v3
+- Local Storage for persistence
+- PWA (manifest + service worker) for installability
+- Deployed via gh-pages to GitHub Pages
 
-**Happy Choring!** 🧹✨
+## License
 
-*Made with ❤️ for families who want to make chores fun and educational*
+MIT

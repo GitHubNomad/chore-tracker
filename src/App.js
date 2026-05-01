@@ -66,6 +66,29 @@ const categoryColors = {
     }
 };
 
+function calculateStreak(completionHistory) {
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
+    let checkDate = new Date(today);
+
+    // If nothing done today, start counting from yesterday
+    if (!completionHistory[todayStr]) {
+        checkDate.setDate(checkDate.getDate() - 1);
+    }
+
+    let streak = 0;
+    while (true) {
+        const dateStr = checkDate.toISOString().split('T')[0];
+        if (completionHistory[dateStr]) {
+            streak++;
+            checkDate.setDate(checkDate.getDate() - 1);
+        } else {
+            break;
+        }
+    }
+    return streak;
+}
+
 // Centralized localStorage management
 class StorageManager {
     static get(key, defaultValue) {
@@ -99,7 +122,10 @@ function useAppState() {
     const [completedChores, setCompletedChores] = useState(() => 
         StorageManager.get("completedChores", [])
     );
-    const [ticketsRedeemed, setTicketsRedeemed] = useState(() => 
+    const [ticketsBanked, setTicketsBanked] = useState(() =>
+        StorageManager.get("ticketsBanked", 0)
+    );
+    const [ticketsRedeemed, setTicketsRedeemed] = useState(() =>
         StorageManager.get("redeemedTickets", 0)
     );
     const [completionHistory, setCompletionHistory] = useState(() => 
@@ -114,6 +140,10 @@ function useAppState() {
     }, [completedChores]);
 
     useEffect(() => {
+        StorageManager.set("ticketsBanked", ticketsBanked);
+    }, [ticketsBanked]);
+
+    useEffect(() => {
         StorageManager.set("redeemedTickets", ticketsRedeemed);
     }, [ticketsRedeemed]);
 
@@ -125,25 +155,18 @@ function useAppState() {
         StorageManager.set("unlockedAchievements", unlockedAchievements);
     }, [unlockedAchievements]);
 
-    const ticketsEarned = useMemo(() => 
-        chores
-            .filter(chore => completedChores.includes(chore.name))
-            .reduce((sum, chore) => sum + chore.tickets, 0),
-        [completedChores]
-    );
-
-    const availableTickets = ticketsEarned - ticketsRedeemed;
+    const availableTickets = ticketsBanked - ticketsRedeemed;
 
     const stats = useMemo(() => ({
-        currentStreak: 3,
+        currentStreak: calculateStreak(completionHistory),
         totalChoresCompleted: completedChores.length,
-        totalTicketsEarned: ticketsEarned,
+        totalTicketsEarned: ticketsBanked,
         totalTicketsSpent: ticketsRedeemed,
-        hardChoresCompleted: completedChores.filter(choreName => 
+        hardChoresCompleted: completedChores.filter(choreName =>
             chores.find(c => c.name === choreName)?.category === 'Hard'
         ).length,
         weeklyGoalProgress: Math.round((completedChores.length / 15) * 100)
-    }), [completedChores, ticketsEarned, ticketsRedeemed]);
+    }), [completedChores, ticketsBanked, ticketsRedeemed, completionHistory]);
 
     const groupedChores = useMemo(() => ({
         Easy: chores.filter(chore => chore.category === 'Easy'),
@@ -152,11 +175,19 @@ function useAppState() {
     }), []);
 
     const toggleChore = useCallback((chore) => {
-        setCompletedChores(prev => 
-            prev.includes(chore.name)
-                ? prev.filter(name => name !== chore.name)
-                : [...prev, chore.name]
-        );
+        setCompletedChores(prev => {
+            const isCompleting = !prev.includes(chore.name);
+            if (isCompleting) {
+                const today = new Date().toISOString().split('T')[0];
+                setCompletionHistory(hist => ({ ...hist, [today]: true }));
+                setTicketsBanked(t => t + chore.tickets);
+            } else {
+                setTicketsBanked(t => t - chore.tickets);
+            }
+            return isCompleting
+                ? [...prev, chore.name]
+                : prev.filter(name => name !== chore.name);
+        });
     }, []);
 
     const purchaseItem = useCallback((cost) => {
@@ -172,18 +203,26 @@ function useAppState() {
     }, []);
 
     const unlockAchievement = useCallback((achievementId) => {
-        setUnlockedAchievements(prev => 
+        setUnlockedAchievements(prev =>
             prev.includes(achievementId) ? prev : [...prev, achievementId]
         );
+    }, []);
+
+    const resetAll = useCallback(() => {
+        setCompletedChores([]);
+        setTicketsBanked(0);
+        setTicketsRedeemed(0);
+        setCompletionHistory({});
+        setUnlockedAchievements([]);
     }, []);
 
     return {
         currentPage,
         completedChores,
+        ticketsBanked,
         ticketsRedeemed,
         completionHistory,
         unlockedAchievements,
-        ticketsEarned,
         availableTickets,
         stats,
         groupedChores,
@@ -191,7 +230,8 @@ function useAppState() {
         toggleChore,
         purchaseItem,
         resetWeek,
-        unlockAchievement
+        unlockAchievement,
+        resetAll
     };
 }
 
@@ -223,7 +263,22 @@ function useAchievementChecker(stats, unlockedAchievements, unlockAchievement) {
 }
 
 // Navigation Component
-function Navigation({ currentPage, onPageChange }) {
+function Navigation({ currentPage, onPageChange, devMode, onDevModeToggle }) {
+    const clickCountRef = React.useRef(0);
+    const clickTimerRef = React.useRef(null);
+
+    const handleTitleClick = () => {
+        clickCountRef.current += 1;
+        clearTimeout(clickTimerRef.current);
+        clickTimerRef.current = setTimeout(() => {
+            clickCountRef.current = 0;
+        }, 2000);
+        if (clickCountRef.current >= 5) {
+            clickCountRef.current = 0;
+            onDevModeToggle();
+        }
+    };
+
     const navItems = [
         { id: 'dashboard', label: 'Dashboard', icon: '🏠' },
         { id: 'chores', label: 'Chores', icon: '✅' },
@@ -235,8 +290,18 @@ function Navigation({ currentPage, onPageChange }) {
         <nav className="bg-white border-b border-gray-200 shadow-sm">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16">
-                    <div className="flex items-center">
-                        <h1 className="text-xl font-semibold text-gray-900">Family Chore Tracker</h1>
+                    <div className="flex items-center gap-3">
+                        <h1
+                            className="text-xl font-semibold text-gray-900 cursor-default select-none"
+                            onClick={handleTitleClick}
+                        >
+                            Family Chore Tracker
+                        </h1>
+                        {devMode && (
+                            <span className="text-xs font-bold text-white bg-red-500 px-2 py-0.5 rounded">
+                                DEV
+                            </span>
+                        )}
                     </div>
                     <div className="flex space-x-8">
                         {navItems.map((item) => (
@@ -591,10 +656,40 @@ function ProgressTracking({ stats, unlockedAchievements }) {
     );
 }
 
+// Dev Mode Banner Component
+function DevModeBanner({ onResetAll, onClose }) {
+    const handleReset = () => {
+        if (window.confirm("Reset ALL progress? This clears chores, tickets, history, and achievements. This cannot be undone.")) {
+            onResetAll();
+        }
+    };
+
+    return (
+        <div className="bg-red-50 border-b-2 border-red-300 px-4 py-2 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+                <span className="text-red-700 font-semibold text-sm">Dev Mode</span>
+                <button
+                    onClick={handleReset}
+                    className="bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-3 py-1 rounded transition-colors"
+                >
+                    Reset All Progress
+                </button>
+            </div>
+            <button
+                onClick={onClose}
+                className="text-red-400 hover:text-red-600 text-sm font-medium transition-colors"
+            >
+                Exit Dev Mode
+            </button>
+        </div>
+    );
+}
+
 // Main App Component
 export default function App() {
     const appState = useAppState();
-    
+    const [devMode, setDevMode] = useState(false);
+
     useAchievementChecker(appState.stats, appState.unlockedAchievements, appState.unlockAchievement);
 
     const handleReset = () => {
@@ -649,10 +744,18 @@ export default function App() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <Navigation 
-                currentPage={appState.currentPage} 
-                onPageChange={appState.setCurrentPage} 
+            <Navigation
+                currentPage={appState.currentPage}
+                onPageChange={appState.setCurrentPage}
+                devMode={devMode}
+                onDevModeToggle={() => setDevMode(d => !d)}
             />
+            {devMode && (
+                <DevModeBanner
+                    onResetAll={appState.resetAll}
+                    onClose={() => setDevMode(false)}
+                />
+            )}
             {renderCurrentPage()}
         </div>
     );
