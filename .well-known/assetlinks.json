@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.githubnomad.twa",
+        "sha256_cert_fingerprints": ["44:13:F7:C3:95:5A:D4:02:E9:54:12:0A:6F:52:AC:E7:4D:BB:16:D0:23:53:B4:E5:61:91:90:39:4D:C7:71:35"]
+      }
+    }]
