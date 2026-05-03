@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/chore-tracker/static/css/main.899c910e.css",
+    "main.js": "/chore-tracker/static/js/main.f99d788c.js",
+    "index.html": "/chore-tracker/index.html",
+    "main.899c910e.css.map": "/chore-tracker/static/css/main.899c910e.css.map",
+    "main.f99d788c.js.map": "/chore-tracker/static/js/main.f99d788c.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.899c910e.css",
+    "static/js/main.f99d788c.js"
+  ]
+}
