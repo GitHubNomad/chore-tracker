@@ -52,5 +52,8 @@
   "categories": ["education", "lifestyle"],
   "lang": "en-US",
   "prefer_related_applications": false,
-  "related_applications": []
+  "related_applications": [],
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  }
 }
