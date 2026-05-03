@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service — Chore Quest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+      background: #f7f9ff;
+      color: #171c22;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      background: white;
+      border-bottom: 1px solid #c2c6d6;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header .logo {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0051ae;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+
+    header .back {
+      font-size: 13px;
+      font-weight: 600;
+      color: #727785;
+      text-decoration: none;
+      margin-left: auto;
+      padding: 6px 12px;
+      border: 1px solid #c2c6d6;
+      border-radius: 8px;
+      transition: color 0.15s;
+    }
+    header .back:hover { color: #0051ae; border-color: #0051ae; }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0051ae, #0969da);
+      border-radius: 20px;
+      padding: 36px 32px;
+      margin-bottom: 40px;
+      color: white;
+      box-shadow: 0 6px 0 #003f88;
+    }
+
+    .hero h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .hero .date {
+      margin-top: 16px;
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .quick-facts {
+      background: #d1f2d8;
+      border: 1px solid #a8e6b8;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 40px;
+      box-shadow: 0 3px 0 #2dba4e33;
+    }
+
+    .quick-facts h2 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #005320;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .quick-facts ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .quick-facts li {
+      font-size: 14px;
+      font-weight: 600;
+      color: #002d0f;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .quick-facts li::before {
+      content: '✓';
+      color: #2dba4e;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    section {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid #c2c6d6;
+      padding: 28px;
+      margin-bottom: 20px;
+      box-shadow: 0 3px 0 rgba(0,0,0,0.05);
+    }
+
+    section h2 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #0051ae;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #f0f4fc;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    section h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #171c22;
+      margin: 20px 0 8px;
+    }
+
+    section p {
+      font-size: 14px;
+      color: #424753;
+      margin-bottom: 12px;
+    }
+
+    section p:last-child { margin-bottom: 0; }
+
+    section ul {
+      list-style: none;
+      margin: 8px 0 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    section ul li {
+      font-size: 14px;
+      color: #424753;
+      padding-left: 18px;
+      position: relative;
+    }
+
+    section ul li::before {
+      content: '·';
+      position: absolute;
+      left: 6px;
+      color: #0969da;
+      font-weight: 800;
+    }
+
+    .highlight-box {
+      background: #f0f4fc;
+      border-left: 4px solid #0969da;
+      border-radius: 0 10px 10px 0;
+      padding: 14px 16px;
+      margin: 14px 0;
+      font-size: 14px;
+      color: #424753;
+      font-weight: 500;
+    }
+
+    .warning-box {
+      background: #fff3c4;
+      border-left: 4px solid #d4a017;
+      border-radius: 0 10px 10px 0;
+      padding: 14px 16px;
+      margin: 14px 0;
+      font-size: 14px;
+      color: #7a5000;
+      font-weight: 500;
+    }
+
+    footer {
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 13px;
+      color: #727785;
+      border-top: 1px solid #c2c6d6;
+    }
+
+    footer a {
+      color: #0969da;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .hero { padding: 28px 24px; }
+      .hero h1 { font-size: 22px; }
+      main { padding: 24px 16px 60px; }
+      section { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="logo">⚡ Chore Quest</span>
+  <a class="back" href="javascript:history.back()">← Back</a>
+</header>
+
+<main>
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Terms of Service</h1>
+    <p>Please read these terms carefully before using Chore Quest. By downloading or using the App, you agree to be bound by them.</p>
+    <div class="date">Effective Date: May 2, 2026 &nbsp;·&nbsp; Version 1.0</div>
+  </div>
+
+  <!-- Quick Summary -->
+  <div class="quick-facts">
+    <h2>📋 Plain-English Summary</h2>
+    <ul>
+      <li>One-time purchase — no subscriptions, no hidden fees</li>
+      <li>All data stays on your device — we never see it</li>
+      <li>Licensed for personal, household use (not for resale)</li>
+      <li>Refunds follow Google Play's standard refund policy</li>
+      <li>App provided "as is" — no warranty on data persistence</li>
+    </ul>
+  </div>
+
+  <!-- 1. Acceptance -->
+  <section>
+    <h2>1. Acceptance of Terms</h2>
+    <p>These Terms of Service ("Terms") constitute a legally binding agreement between you ("you" or "User") and the developer of Chore Quest ("we," "us," or "Developer") governing your access to and use of the Chore Quest mobile application ("App").</p>
+    <p>By downloading, installing, or using the App, you confirm that you have read, understood, and agree to these Terms. If you do not agree, do not install or use the App.</p>
+    <p>If you are a parent or guardian installing the App for a child, you accept these Terms on behalf of yourself and acknowledge that you are responsible for supervising the child's use.</p>
+  </section>
+
+  <!-- 2. License -->
+  <section>
+    <h2>2. License Grant</h2>
+    <p>Subject to your compliance with these Terms and payment of the applicable purchase price, we grant you a limited, non-exclusive, non-transferable, revocable license to:</p>
+    <ul>
+      <li>Download and install one copy of the App on devices you own or control</li>
+      <li>Use the App for your personal, non-commercial household purposes</li>
+      <li>Share the App within your immediate household or family unit</li>
+    </ul>
+    <div class="highlight-box">
+      This license is for personal family use only. You may not resell, sublicense, rent, lease, or otherwise transfer the App or your rights under these Terms to any third party.
+    </div>
+    <h3>What You May Not Do</h3>
+    <ul>
+      <li>Copy, modify, or create derivative works of the App</li>
+      <li>Reverse-engineer, decompile, or disassemble the App</li>
+      <li>Remove or alter any copyright or proprietary notices</li>
+      <li>Use the App for any commercial purpose or on behalf of a business</li>
+      <li>Distribute or publicly display the App or its content</li>
+    </ul>
+  </section>
+
+  <!-- 3. Purchase and Payment -->
+  <section>
+    <h2>3. Purchase and Payment</h2>
+    <p>Chore Quest is a one-time paid application available through the Google Play Store. All purchases are processed by Google LLC through the Google Play billing system. We do not collect, store, or have access to your payment information.</p>
+    <h3>One-Time Purchase</h3>
+    <p>Your purchase grants you a perpetual license to use the version of the App available at the time of purchase, as well as any future updates we release at our discretion. There are no recurring subscription fees.</p>
+    <h3>Refunds</h3>
+    <p>Refund eligibility is governed exclusively by Google Play's refund policy. Google typically allows a refund within 2 hours of purchase for apps. After that window closes, refund requests must be submitted to Google directly. We do not have the ability to issue refunds independently of Google Play.</p>
+    <div class="highlight-box">
+      To request a refund, visit: <strong>play.google.com/store/account/orderhistory</strong> and follow Google's refund process.
+    </div>
+    <h3>Price Changes</h3>
+    <p>We reserve the right to change the App's price at any time. Price changes do not affect purchases you have already completed.</p>
+  </section>
+
+  <!-- 4. Description of the App -->
+  <section>
+    <h2>4. Description of the App</h2>
+    <p>Chore Quest is a gamified household chore tracker designed for families. The App allows parents to create chore lists and allows children to mark chores complete, earn virtual tickets, and redeem those tickets for rewards defined by the parent.</p>
+    <p>All data — including chore configurations, ticket balances, streaks, and reward settings — is stored exclusively on your device using your device's local storage. No data is transmitted to any server controlled by us.</p>
+    <div class="highlight-box">
+      Because all data is stored locally, it is tied to the specific device and browser/app installation. Uninstalling the App, clearing app data, or factory resetting your device will permanently erase all stored progress.
+    </div>
+  </section>
+
+  <!-- 5. User Responsibilities -->
+  <section>
+    <h2>5. User Responsibilities</h2>
+    <h3>Parental Supervision</h3>
+    <p>The App is designed for children ages 4 and up and is intended to be set up and supervised by a parent or guardian. Adults are responsible for:</p>
+    <ul>
+      <li>Setting and maintaining the parent PIN to restrict access to admin settings</li>
+      <li>Configuring age-appropriate chores, ticket values, and rewards</li>
+      <li>Reviewing and approving completed chores</li>
+      <li>Monitoring their child's use of the App</li>
+    </ul>
+    <h3>Accurate Use</h3>
+    <p>You agree to use the App only for its intended purpose as a household chore management tool. You will not attempt to exploit, hack, or otherwise misuse the App or its local data storage.</p>
+    <h3>Data Backups</h3>
+    <p>Because all data is stored locally on your device, you are solely responsible for any data loss. We strongly recommend periodically noting your household's chore configurations so they can be re-entered if the App is reinstalled or data is cleared.</p>
+  </section>
+
+  <!-- 6. Intellectual Property -->
+  <section>
+    <h2>6. Intellectual Property</h2>
+    <p>The App, including its source code, design, graphics, text, and all other content, is owned by the Developer and is protected by applicable copyright, trademark, and other intellectual property laws.</p>
+    <p>These Terms do not transfer any ownership rights to you. You receive only the limited license described in Section 2.</p>
+    <p>All feedback, suggestions, or ideas you submit about the App may be used by us freely without any obligation to you.</p>
+  </section>
+
+  <!-- 7. Third-Party Services -->
+  <section>
+    <h2>7. Third-Party Services</h2>
+    <p>The App relies on the following third-party services that are governed by their own terms:</p>
+    <ul>
+      <li><strong>Google Play Store</strong> — App distribution and payment processing (Google's Terms of Service apply)</li>
+      <li><strong>Google Fonts</strong> — Font delivery via CDN (the Plus Jakarta Sans typeface). Google Fonts may set a brief connection to Google's servers to load the font.</li>
+    </ul>
+    <p>We are not responsible for the availability, accuracy, or practices of these third-party services. Your use of them is subject to their respective terms and privacy policies.</p>
+  </section>
+
+  <!-- 8. Disclaimer of Warranties -->
+  <section>
+    <h2>8. Disclaimer of Warranties</h2>
+    <div class="warning-box">
+      THE APP IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED.
+    </div>
+    <p>To the fullest extent permitted by applicable law, we disclaim all warranties including, but not limited to:</p>
+    <ul>
+      <li>Implied warranties of merchantability, fitness for a particular purpose, and non-infringement</li>
+      <li>Any warranty that the App will be uninterrupted, error-free, or free of viruses or other harmful components</li>
+      <li>Any warranty regarding the accuracy, reliability, or completeness of any content in the App</li>
+      <li>Any warranty that data stored locally will be preserved across device resets, OS updates, or storage failures</li>
+    </ul>
+    <p>Some jurisdictions do not allow the exclusion of implied warranties, so some of the above may not apply to you.</p>
+  </section>
+
+  <!-- 9. Limitation of Liability -->
+  <section>
+    <h2>9. Limitation of Liability</h2>
+    <p>To the fullest extent permitted by applicable law, in no event shall the Developer be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of data, loss of profits, or loss of goodwill, arising out of or in connection with your use of or inability to use the App.</p>
+    <p>Our total aggregate liability to you for any claims arising under or related to these Terms or the App shall not exceed the amount you actually paid for the App through the Google Play Store at the time of purchase.</p>
+    <p>Some jurisdictions do not allow the limitation or exclusion of liability for incidental or consequential damages, so the above limitations may not apply to you.</p>
+  </section>
+
+  <!-- 10. Updates and Changes to the App -->
+  <section>
+    <h2>10. Updates and Changes to the App</h2>
+    <p>We may release updates to the App from time to time to fix bugs, improve performance, or add features. Updates will be delivered through the Google Play Store. We are under no obligation to provide updates.</p>
+    <p>We reserve the right to modify, suspend, or discontinue the App (or any part of it) at any time without prior notice. We will not be liable to you for any such modification, suspension, or discontinuation.</p>
+    <p>We also reserve the right to modify these Terms at any time. When we do, we will update the "Effective Date" at the top of this page. Continued use of the App after a change constitutes your acceptance of the revised Terms.</p>
+  </section>
+
+  <!-- 11. Termination -->
+  <section>
+    <h2>11. Termination</h2>
+    <p>Your license to use the App remains in effect until terminated. Your rights under these Terms will terminate automatically and without notice if you fail to comply with any provision of these Terms.</p>
+    <p>Upon termination, you must stop using the App and delete all copies of the App from your devices.</p>
+    <p>Sections 6 (Intellectual Property), 8 (Disclaimer of Warranties), 9 (Limitation of Liability), and 12 (Governing Law) survive any termination of these Terms.</p>
+  </section>
+
+  <!-- 12. Governing Law -->
+  <section>
+    <h2>12. Governing Law and Disputes</h2>
+    <p>These Terms are governed by and construed in accordance with the laws of the United States, without regard to conflict of law principles. Any disputes arising under these Terms shall be subject to the exclusive jurisdiction of the courts located in the United States.</p>
+    <p>If any provision of these Terms is found to be unenforceable, the remaining provisions will continue in full force and effect.</p>
+    <p>Our failure to enforce any right or provision of these Terms shall not constitute a waiver of that right or provision.</p>
+  </section>
+
+  <!-- 13. Children -->
+  <section>
+    <h2>13. Children's Use</h2>
+    <p>The App is designed to be used by children under the direct supervision of a parent or guardian. Children themselves do not enter into any contract or agreement with us — the purchasing adult accepts these Terms on behalf of the household.</p>
+    <p>If you are a parent who has purchased the App for your child to use, you remain responsible for your child's use of the App and for ensuring they understand the App's chore and reward system.</p>
+    <p>We do not knowingly collect any personal information from children. See our <a href="privacy.html" style="color:#0969da;font-weight:600;">Privacy Policy</a> for full details.</p>
+  </section>
+
+  <!-- 14. Contact -->
+  <section>
+    <h2>14. Contact Us</h2>
+    <p>If you have questions or concerns about these Terms of Service, please contact us:</p>
+    <div class="highlight-box">
+      <strong>Email:</strong> brl2332@gmail.com<br />
+      <strong>App:</strong> Chore Quest<br />
+      <strong>Platform:</strong> Google Play Store<br /><br />
+      We aim to respond to all inquiries within 5 business days.
+    </div>
+    <p>For refund requests, please use the Google Play Store's built-in refund process rather than contacting us directly, as we cannot process refunds independently.</p>
+  </section>
+
+</main>
+
+<footer>
+  <p>
+    <a href="privacy.html">Privacy Policy</a> &nbsp;·&nbsp;
+    <strong>Terms of Service</strong> &nbsp;·&nbsp;
+    &copy; 2026 Chore Quest
+  </p>
+  <p style="margin-top:8px;">Chore Quest is an independent app. Not affiliated with Google LLC.</p>
+</footer>
+
+</body>
+</html>
