@@ -1,7 +1,7 @@
 {
-  "short_name": "Chores",
-  "name": "Family Chore Tracker",
-  "description": "Track chores and earn rewards!",
+  "short_name": "Chore Quest",
+  "name": "Chore Quest – Family Chore Tracker",
+  "description": "A gamified chore tracker for kids. Complete quests, earn tickets, and redeem rewards!",
   "icons": [
     {
       "src": "icon.svg",
@@ -10,10 +10,13 @@
       "purpose": "any maskable"
     }
   ],
-  "start_url": ".",
-  "scope": ".",
+  "start_url": "/chore-tracker/",
+  "scope": "/chore-tracker/",
   "display": "standalone",
   "orientation": "portrait",
-  "theme_color": "#3b82f6",
-  "background_color": "#f0fdf4"
+  "theme_color": "#0051ae",
+  "background_color": "#f7f9ff",
+  "categories": ["education", "lifestyle"],
+  "lang": "en-US",
+  "related_applications": []
 }

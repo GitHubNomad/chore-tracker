@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — Chore Quest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+      background: #f7f9ff;
+      color: #171c22;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      background: white;
+      border-bottom: 1px solid #c2c6d6;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header .logo {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0051ae;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+
+    header .back {
+      font-size: 13px;
+      font-weight: 600;
+      color: #727785;
+      text-decoration: none;
+      margin-left: auto;
+      padding: 6px 12px;
+      border: 1px solid #c2c6d6;
+      border-radius: 8px;
+      transition: color 0.15s;
+    }
+    header .back:hover { color: #0051ae; border-color: #0051ae; }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0051ae, #0969da);
+      border-radius: 20px;
+      padding: 36px 32px;
+      margin-bottom: 40px;
+      color: white;
+      box-shadow: 0 6px 0 #003f88;
+    }
+
+    .hero h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .hero .date {
+      margin-top: 16px;
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .quick-facts {
+      background: #d1f2d8;
+      border: 1px solid #a8e6b8;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 40px;
+      box-shadow: 0 3px 0 #2dba4e33;
+    }
+
+    .quick-facts h2 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #005320;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .quick-facts ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .quick-facts li {
+      font-size: 14px;
+      font-weight: 600;
+      color: #002d0f;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .quick-facts li::before {
+      content: '✓';
+      color: #2dba4e;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    section {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid #c2c6d6;
+      padding: 28px;
+      margin-bottom: 20px;
+      box-shadow: 0 3px 0 rgba(0,0,0,0.05);
+    }
+
+    section h2 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #0051ae;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #f0f4fc;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    section h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #171c22;
+      margin: 20px 0 8px;
+    }
+
+    section p {
+      font-size: 14px;
+      color: #424753;
+      margin-bottom: 12px;
+    }
+
+    section p:last-child { margin-bottom: 0; }
+
+    section ul {
+      list-style: none;
+      margin: 8px 0 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    section ul li {
+      font-size: 14px;
+      color: #424753;
+      padding-left: 18px;
+      position: relative;
+    }
+
+    section ul li::before {
+      content: '·';
+      position: absolute;
+      left: 6px;
+      color: #0969da;
+      font-weight: 800;
+    }
+
+    .highlight-box {
+      background: #f0f4fc;
+      border-left: 4px solid #0969da;
+      border-radius: 0 10px 10px 0;
+      padding: 14px 16px;
+      margin: 14px 0;
+      font-size: 14px;
+      color: #424753;
+      font-weight: 500;
+    }
+
+    .warning-box {
+      background: #fff3c4;
+      border-left: 4px solid #d4a017;
+      border-radius: 0 10px 10px 0;
+      padding: 14px 16px;
+      margin: 14px 0;
+      font-size: 14px;
+      color: #3d2f00;
+      font-weight: 500;
+    }
+
+    .contact-box {
+      background: #f0f4fc;
+      border: 1px solid #c2c6d6;
+      border-radius: 14px;
+      padding: 20px;
+      margin-top: 16px;
+    }
+
+    .contact-box p {
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: #424753;
+    }
+
+    .contact-box a {
+      color: #0969da;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .contact-box a:hover { text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #c2c6d6;
+    }
+
+    footer a { color: #727785; text-decoration: none; }
+    footer a:hover { color: #0051ae; }
+
+    @media (max-width: 600px) {
+      main { padding: 24px 16px 60px; }
+      .hero { padding: 24px 20px; }
+      .hero h1 { font-size: 22px; }
+      section { padding: 20px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span style="font-size:20px">⚡</span>
+  <a class="logo" href="./index.html">Chore Quest</a>
+  <a class="back" href="./index.html">← Back to App</a>
+</header>
+
+<main>
+
+  <div class="hero">
+    <h1>Privacy Policy</h1>
+    <p>We built Chore Quest to be safe for the whole family — including kids. Read below to see exactly what we do (and don't) do with your data.</p>
+    <p class="date">Effective Date: May 2, 2026 &nbsp;·&nbsp; Last Updated: May 2, 2026</p>
+  </div>
+
+  <!-- Quick Facts -->
+  <div class="quick-facts">
+    <h2>🛡️ The Short Version</h2>
+    <ul>
+      <li>We do not collect any personal information from you or your children.</li>
+      <li>All app data is stored only on your device — nothing is sent to any server.</li>
+      <li>We have no advertising, no ad networks, and no tracking of any kind.</li>
+      <li>We do not share any data with third parties — there is nothing to share.</li>
+      <li>Parents are in full control of all data through the Parent Settings screen.</li>
+      <li>The app works entirely offline after the first load.</li>
+    </ul>
+  </div>
+
+  <!-- 1. About -->
+  <section>
+    <h2>1. About This Policy</h2>
+    <p>This Privacy Policy describes how <strong>Chore Quest</strong> ("the App," "we," "us," or "our") handles information when you use our application. Chore Quest is a family chore-tracking tool designed to help parents assign household tasks to children, who earn virtual ticket rewards for completing them.</p>
+    <p>This policy applies to the Chore Quest web application hosted at <strong>https://GitHubNomad.github.io/chore-tracker</strong>, the installable Progressive Web App (PWA) version, and any version distributed through the Google Play Store.</p>
+    <p>By using the App, you agree to the practices described in this policy. If you are a parent or guardian installing this App for your child, you accept this policy on behalf of your family.</p>
+  </section>
+
+  <!-- 2. Information We Collect -->
+  <section>
+    <h2>2. Information We Collect</h2>
+    <p><strong>We collect no personal information.</strong> The App does not ask for, store, or transmit any of the following:</p>
+    <ul>
+      <li>Names, email addresses, phone numbers, or other contact details</li>
+      <li>Account credentials or passwords (there are no accounts)</li>
+      <li>Device identifiers such as IMEI, serial number, MAC address, or advertising ID</li>
+      <li>Location data (precise or approximate)</li>
+      <li>Photos, camera, or microphone access</li>
+      <li>Contacts or calendar data</li>
+      <li>Biometric data of any kind</li>
+      <li>Payment or financial information</li>
+    </ul>
+
+    <h3>What the App Stores Locally</h3>
+    <p>The App uses your device's <strong>browser localStorage</strong> (a standard web technology) to save your family's progress between sessions. This data is stored exclusively on your device and is never transmitted anywhere. It includes:</p>
+    <ul>
+      <li>The list of chores and their completion status</li>
+      <li>Virtual ticket balances (earned and redeemed)</li>
+      <li>Daily completion history used to calculate streaks</li>
+      <li>Achievement badges earned</li>
+      <li>Custom chores added by a parent</li>
+      <li>The parent PIN (stored locally on-device only)</li>
+    </ul>
+
+    <div class="highlight-box">
+      All of this data exists only on your device. Clearing your browser data, reinstalling the app, or switching devices will erase it. We have no way to recover it because we never had access to it in the first place.
+    </div>
+  </section>
+
+  <!-- 3. Children's Privacy -->
+  <section>
+    <h2>3. Children's Privacy (COPPA)</h2>
+    <p>Chore Quest is a family tool. While children use the App to track chores and earn rewards, the App is <strong>set up and managed by a parent or guardian</strong>. No child-specific information is collected or processed.</p>
+
+    <h3>Our Commitment</h3>
+    <ul>
+      <li>We do not knowingly collect personal information from children under 13 (or under 16 in the European Economic Area).</li>
+      <li>The App does not include registration, accounts, or any mechanism by which a child could submit personal information.</li>
+      <li>The App does not display advertisements to children.</li>
+      <li>The App does not contain social features, chat functionality, or any means of contacting strangers.</li>
+      <li>No behavioral profiling or tracking of children occurs.</li>
+    </ul>
+
+    <h3>Parental Control</h3>
+    <p>Parents access administrative features — including resetting all data — through the <strong>Parent Settings screen</strong>, which is protected by a PIN. Parents can delete all locally stored data at any time by using the "Reset All Progress" function in Parent Settings, or by clearing the app's data through their device's browser or app settings.</p>
+
+    <div class="highlight-box">
+      If you believe we have inadvertently collected information from or about a child without proper consent, please contact us immediately at the address below and we will take prompt corrective action.
+    </div>
+  </section>
+
+  <!-- 4. Advertising and Tracking -->
+  <section>
+    <h2>4. Advertising and Tracking</h2>
+    <p><strong>The App contains no advertising of any kind.</strong></p>
+    <ul>
+      <li>No advertising SDKs, networks, or frameworks are used.</li>
+      <li>No interest-based or behavioral advertising is served.</li>
+      <li>No ad tracking, conversion pixels, or retargeting occurs.</li>
+      <li>No Google Ads, Facebook Ads, or any other ad platform is integrated.</li>
+      <li>No Google Advertising ID (GAID) or Apple IDFA is accessed or used.</li>
+    </ul>
+    <p>We have intentionally built Chore Quest without any advertising to keep it safe and appropriate for all ages.</p>
+  </section>
+
+  <!-- 5. Analytics and Telemetry -->
+  <section>
+    <h2>5. Analytics and Telemetry</h2>
+    <p><strong>The App contains no analytics or telemetry services.</strong></p>
+    <ul>
+      <li>No Google Analytics, Firebase Analytics, or similar tools are used.</li>
+      <li>No crash reporting services (e.g. Crashlytics, Sentry) are integrated.</li>
+      <li>No usage telemetry or behavioral event tracking occurs.</li>
+      <li>We do not know how often you use the App, which features you use, or anything about how you interact with it.</li>
+    </ul>
+  </section>
+
+  <!-- 6. Third-Party Services -->
+  <section>
+    <h2>6. Third-Party Services</h2>
+    <p>The App loads the <strong>Plus Jakarta Sans</strong> font from Google Fonts (<a href="https://fonts.googleapis.com" target="_blank" rel="noopener noreferrer">fonts.googleapis.com</a>). This is a standard web font service. When your device requests the font, Google may log the request (IP address, browser type) in accordance with <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google's Privacy Policy</a>. No personally identifiable information from within the App is sent to Google as part of this request.</p>
+
+    <div class="warning-box">
+      <strong>Google Play:</strong> If you downloaded this App from the Google Play Store, Google's own privacy policy and terms of service apply to the Play Store transaction, installation, and device interactions. We do not receive any data from Google about you as a result of your Play Store download.
+    </div>
+
+    <p>Other than the Google Fonts request described above, the App makes no network requests of any kind during normal use and operates entirely offline after the initial load.</p>
+  </section>
+
+  <!-- 7. Payments and Purchases -->
+  <section>
+    <h2>7. Payments and Purchases</h2>
+    <p>Chore Quest is available as a one-time paid purchase through the Google Play Store. <strong>We do not process, store, or have access to any payment information.</strong> All purchases are handled exclusively by Google LLC through the Google Play billing system, subject to Google's own <a href="https://payments.google.com/payments/apis-secure/get_legal_document?ldo=0&ldt=privacynotice" target="_blank" rel="noopener noreferrer">Payments Privacy Notice</a>.</p>
+    <ul>
+      <li>We do not receive your credit card number, bank account details, or any payment credentials.</li>
+      <li>Google notifies us only that a purchase was completed — we receive no financial details about you.</li>
+      <li>There are no subscriptions, recurring charges, or in-app purchases. You pay once.</li>
+      <li>There are no additional fees, premium tiers, or locked features after purchase.</li>
+    </ul>
+
+    <h3>Refunds</h3>
+    <p>Google Play provides a standard refund window (typically 2 hours after purchase) during which you can request a full refund directly through the Play Store. After this window, refund requests are handled by Google in accordance with their refund policies. We do not independently process refunds.</p>
+    <p>If you experience a technical issue that prevents the App from functioning as described, contact us at <a href="mailto:brl2332@gmail.com">brl2332@gmail.com</a> and we will work with you to resolve it.</p>
+  </section>
+
+  <!-- 8. Data Security -->
+  <section>
+    <h2>8. Data Security</h2>
+    <p>Because all App data is stored locally on your device using standard browser localStorage, the security of that data is governed by your device's security controls (screen lock, biometric authentication, device encryption, etc.).</p>
+    <p>We recommend:</p>
+    <ul>
+      <li>Using a strong PIN or biometric lock on your device</li>
+      <li>Setting a Parent Settings PIN within the App to prevent children from accessing administrative functions</li>
+      <li>Not using the App on shared or public devices where others may access local storage</li>
+    </ul>
+    <p>Since no data is transmitted to any server by us, there is no server-side data breach risk associated with the App. We cannot access, recover, or restore any App data.</p>
+  </section>
+
+  <!-- 9. Data Retention and Deletion -->
+  <section>
+    <h2>9. Data Retention and Deletion</h2>
+    <p>All App data is stored only for as long as it remains on your device. You have complete control over your data at all times.</p>
+
+    <h3>How to Delete Your Data</h3>
+    <ul>
+      <li><strong>In-App:</strong> Open the Parent Settings screen (🔐 tab) and use "Reset All Progress" to erase all chore history, tickets, streaks, and achievements.</li>
+      <li><strong>Browser (web version):</strong> Open your browser settings → Site Settings → Clear data for this site.</li>
+      <li><strong>Android (Play Store version):</strong> Go to Device Settings → Apps → Chore Quest → Storage → Clear Data.</li>
+    </ul>
+    <p>Deletion is immediate and permanent. Because we hold no copy of your data on any server, there is nothing further for us to delete on our end.</p>
+  </section>
+
+  <!-- 9. Disclaimer of Warranties -->
+  <section>
+    <h2>10. Disclaimer of Warranties</h2>
+    <p><strong>THE APP IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED.</strong> To the maximum extent permitted by applicable law, we expressly disclaim all warranties, including but not limited to:</p>
+    <ul>
+      <li>Implied warranties of merchantability, fitness for a particular purpose, and non-infringement</li>
+      <li>Warranties regarding the accuracy, reliability, completeness, or timeliness of App content</li>
+      <li>Warranties that the App will be uninterrupted, error-free, or free of harmful components</li>
+      <li>Warranties regarding the preservation of locally stored data (localStorage can be cleared by the operating system or browser at any time)</li>
+    </ul>
+    <p>Virtual tickets, streak counts, and achievement badges exist solely within the App as game-like motivational tools. They have no monetary value, cannot be transferred or redeemed outside the App, and we make no representations about their suitability for any particular behavior-management purpose.</p>
+  </section>
+
+  <!-- 10. Limitation of Liability -->
+  <section>
+    <h2>11. Limitation of Liability</h2>
+    <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL WE BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO:</p>
+    <ul>
+      <li>Loss of data (including loss of chore history, ticket balances, or achievement progress stored in localStorage)</li>
+      <li>Loss of profits or revenue</li>
+      <li>Personal injury or property damage</li>
+      <li>Emotional distress arising from any failure of the App to function as intended</li>
+      <li>Any damages arising from reliance on the App as a behavior management or parenting tool</li>
+    </ul>
+    <p>Our total cumulative liability to you for any and all claims arising out of or relating to the App shall not exceed the amount you actually paid for the App through the Google Play Store at the time of purchase.</p>
+    <p>Some jurisdictions do not allow the exclusion of certain warranties or limitation of liability for consequential damages. In such jurisdictions, our liability is limited to the maximum extent permitted by law.</p>
+  </section>
+
+  <!-- 11. Your Rights -->
+  <section>
+    <h2>12. Your Privacy Rights</h2>
+
+    <h3>California Residents (CCPA)</h3>
+    <p>California residents have rights under the California Consumer Privacy Act (CCPA). Because we do not collect, sell, share, or process any personal information, there is no personal information to access, delete, correct, or opt out from selling. The CCPA rights are effectively satisfied by our data-free design.</p>
+
+    <h3>European Residents (GDPR)</h3>
+    <p>If you are located in the European Economic Area (EEA), the United Kingdom, or Switzerland, you may have rights under the General Data Protection Regulation (GDPR) or equivalent local laws. Because we do not process any personal data, no legal basis for processing is required, and there is no data subject to GDPR rights requests. The App is designed to be fully GDPR-compliant by virtue of collecting nothing.</p>
+
+    <h3>All Users</h3>
+    <p>Regardless of your jurisdiction, you can at any time:</p>
+    <ul>
+      <li>View all App data (it's visible on-screen in the App)</li>
+      <li>Export or record your data manually</li>
+      <li>Delete all App data using the instructions in Section 8</li>
+      <li>Stop using the App and uninstall it at any time</li>
+    </ul>
+  </section>
+
+  <!-- 12. Changes to This Policy -->
+  <section>
+    <h2>13. Changes to This Policy</h2>
+    <p>We may update this Privacy Policy from time to time to reflect changes in the App's features, applicable law, or best practices. When we make material changes, we will update the "Last Updated" date at the top of this page.</p>
+    <p>We encourage you to review this policy periodically. Continued use of the App after changes become effective constitutes your acceptance of the revised policy.</p>
+    <p>Because we have no way to contact you directly (we hold no contact information), we cannot proactively notify you of changes. Check this page if you want to stay current.</p>
+  </section>
+
+  <!-- 13. Contact -->
+  <section>
+    <h2>14. Contact Us</h2>
+    <p>If you have questions, concerns, or requests related to this Privacy Policy or the App's data practices, please contact us:</p>
+    <div class="contact-box">
+      <p><strong>App:</strong> Chore Quest</p>
+      <p><strong>Developer:</strong> GitHubNomad</p>
+      <p><strong>Email:</strong> <a href="mailto:brl2332@gmail.com">brl2332@gmail.com</a></p>
+      <p><strong>App URL:</strong> <a href="https://GitHubNomad.github.io/chore-tracker">https://GitHubNomad.github.io/chore-tracker</a></p>
+      <p style="margin-top:12px; font-size:13px; color:#727785;">We aim to respond to all privacy-related inquiries within 30 days. For urgent matters involving children's data, we will respond as promptly as possible.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>© 2026 Chore Quest · <a href="./index.html">Back to App</a> · Built with ⚡ for families</p>
+</footer>
+
+</body>
+</html>
