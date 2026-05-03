@@ -5,25 +5,45 @@
   "icons": [
     {
       "src": "icon-512.png",
-      "sizes": "512x512",
+      "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "any"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
     },
     {
       "src": "icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any"
+      "purpose": "any maskable"
     }
   ],
-  "start_url": "/chore-tracker/",
-  "scope": "/chore-tracker/",
+  "screenshots": [
+    {
+      "src": "store-screenshot-dashboard.png",
+      "sizes": "1024x576",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Dashboard – Turn Chores into Quests!"
+    },
+    {
+      "src": "store-screenshot-rewards.png",
+      "sizes": "1024x576",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Virtual Store – Earn Tickets, Claim Rewards!"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Today's Quests",
+      "short_name": "Quests",
+      "description": "Jump straight to today's chores",
+      "url": "https://GitHubNomad.github.io/chore-tracker/",
+      "icons": [{ "src": "icon-512.png", "sizes": "1024x576", "type": "image/png" }]
+    }
+  ],
+  "start_url": "https://GitHubNomad.github.io/chore-tracker/",
+  "scope": "https://GitHubNomad.github.io/chore-tracker/",
+  "dir": "ltr",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#0051ae",
