@@ -23,7 +23,11 @@
       "mcp__stitch__get_project",
       "Bash(git stash *)",
       "Bash(git rebase *)",
-      "Bash(echo \"exit: $?\")"
+      "Bash(echo \"exit: $?\")",
+      "Bash(Get-ChildItem -Path \"c:\\\\Chore Tracker\\\\GitRepos\\\\chore-tracker\" -Force)",
+      "Bash(Select-Object Name, PSIsContainer)",
+      "Bash(Sort-Object PSIsContainer -Descending)",
+      "Bash(xargs ls *)"
     ]
   }
 }

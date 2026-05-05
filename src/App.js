@@ -110,6 +110,7 @@ function useAppState() {
     const [ticketsRedeemed, setTicketsRedeemed] = useState(() => StorageManager.get("redeemedTickets", 0));
     const [completionHistory, setCompletionHistory] = useState(() => StorageManager.get("completionHistory", {}));
     const [unlockedAchievements, setUnlockedAchievements] = useState(() => StorageManager.get("unlockedAchievements", []));
+    const [storeItemList, setStoreItemList] = useState(() => StorageManager.get("storeItems", storeItems));
 
     useEffect(() => { StorageManager.set("choreList", choreList); }, [choreList]);
     useEffect(() => { StorageManager.set("completedChores", completedChores); }, [completedChores]);
@@ -117,6 +118,7 @@ function useAppState() {
     useEffect(() => { StorageManager.set("redeemedTickets", ticketsRedeemed); }, [ticketsRedeemed]);
     useEffect(() => { StorageManager.set("completionHistory", completionHistory); }, [completionHistory]);
     useEffect(() => { StorageManager.set("unlockedAchievements", unlockedAchievements); }, [unlockedAchievements]);
+    useEffect(() => { StorageManager.set("storeItems", storeItemList); }, [storeItemList]);
 
     const availableTickets = ticketsBanked - ticketsRedeemed;
 
@@ -216,11 +218,25 @@ function useAppState() {
         setCompletedChores([]);
     }, []);
 
+    const addStoreItem = useCallback((data) => {
+        setStoreItemList(prev => [...prev, { ...data, id: Date.now() }]);
+    }, []);
+
+    const editStoreItem = useCallback((id, newData) => {
+        setStoreItemList(prev => prev.map(item => item.id === id ? { ...item, ...newData } : item));
+    }, []);
+
+    const deleteStoreItem = useCallback((id) => {
+        setStoreItemList(prev => prev.filter(item => item.id !== id));
+    }, []);
+
     return {
         currentPage, choreList, completedChores, ticketsBanked, ticketsRedeemed,
         completionHistory, unlockedAchievements, availableTickets, stats, groupedChores,
+        storeItemList,
         setCurrentPage, toggleChore, purchaseItem, resetWeek, unlockAchievement, resetAll,
         addChore, editChore, deleteChore, resetChoresToDefault,
+        addStoreItem, editStoreItem, deleteStoreItem,
         addDevTickets, simulateStreak, unlockAllAchievements,
     };
 }
@@ -612,7 +628,7 @@ function RewardCard({ item, availableTickets, onPurchase }) {
     );
 }
 
-function RewardsStore({ availableTickets, onPurchase }) {
+function RewardsStore({ availableTickets, onPurchase, storeItemList }) {
     return (
         <div style={{ maxWidth: 560, margin: '0 auto', padding: '24px 20px 110px' }}>
             <h2 style={{ margin: '0 0 4px', fontSize: 28, fontWeight: 800, color: '#171c22', letterSpacing: '-0.02em' }}>Reward Store 🛒</h2>
@@ -626,7 +642,7 @@ function RewardsStore({ availableTickets, onPurchase }) {
                 <span style={{ fontSize: 56 }}>🎟️</span>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                {storeItems.map(item => <RewardCard key={item.id} item={item} availableTickets={availableTickets} onPurchase={onPurchase} />)}
+                {storeItemList.map(item => <RewardCard key={item.id} item={item} availableTickets={availableTickets} onPurchase={onPurchase} />)}
             </div>
         </div>
     );
@@ -820,6 +836,107 @@ function PinEntry({ onSuccess }) {
                 })}
             </div>
             <p style={{ margin: '24px 0 0', fontSize: 12, fontWeight: 600, color: '#c2c6d6' }}>Default PIN: 1234</p>
+        </div>
+    );
+}
+
+function ChangePinForm({ onSave, onCancel }) {
+    const [phase, setPhase] = useState('new');
+    const [newPin, setNewPin] = useState([]);
+    const [confirmPin, setConfirmPin] = useState([]);
+    const [error, setError] = useState(false);
+    const [saved, setSaved] = useState(false);
+
+    const handleKey = (key) => {
+        const isConfirm = phase === 'confirm';
+        if (key === '⌫') {
+            if (isConfirm) setConfirmPin(d => d.slice(0, -1));
+            else setNewPin(d => d.slice(0, -1));
+            setError(false);
+            return;
+        }
+        const current = isConfirm ? confirmPin : newPin;
+        if (current.length >= 4) return;
+        const next = [...current, key];
+        if (isConfirm) {
+            setConfirmPin(next);
+            if (next.length === 4) {
+                if (next.join('') === newPin.join('')) {
+                    StorageManager.set('parentPin', next.join(''));
+                    setSaved(true);
+                    setTimeout(onSave, 1200);
+                } else {
+                    setError(true);
+                    setTimeout(() => { setConfirmPin([]); setError(false); }, 600);
+                }
+            }
+        } else {
+            setNewPin(next);
+            if (next.length === 4) setTimeout(() => setPhase('confirm'), 200);
+        }
+    };
+
+    const keys = ['1','2','3','4','5','6','7','8','9','','0','⌫'];
+    const digits = phase === 'new' ? newPin : confirmPin;
+
+    return (
+        <div style={{ maxWidth: 360, margin: '0 auto', padding: '48px 24px 110px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <span style={{ fontSize: 48, marginBottom: 12 }}>{saved ? '✅' : '🔑'}</span>
+            <h2 style={{ margin: '0 0 6px', fontSize: 24, fontWeight: 800, color: '#171c22', letterSpacing: '-0.02em' }}>
+                {saved ? 'PIN Updated!' : 'Change PIN'}
+            </h2>
+            <p style={{ margin: '0 0 32px', fontSize: 14, fontWeight: 600, color: '#727785' }}>
+                {saved ? 'Your new PIN is saved' : phase === 'new' ? 'Enter a new 4-digit PIN' : 'Re-enter PIN to confirm'}
+            </p>
+            <div style={{ display: 'flex', gap: 16, marginBottom: error ? 8 : 32 }}>
+                {[0, 1, 2, 3].map(i => (
+                    <div key={i} style={{
+                        width: 18, height: 18, borderRadius: 9999,
+                        background: digits[i] !== undefined ? (error ? '#ba1a1a' : saved ? '#2dba4e' : '#0969da') : 'transparent',
+                        border: `2.5px solid ${error ? '#ba1a1a' : digits[i] !== undefined ? (saved ? '#2dba4e' : '#0969da') : '#c2c6d6'}`,
+                        transition: 'background 0.15s, border-color 0.15s',
+                    }} />
+                ))}
+            </div>
+            {error && <p style={{ margin: '0 0 20px', fontSize: 13, fontWeight: 700, color: '#ba1a1a' }}>PINs don't match — try again</p>}
+            {!saved && (
+                <>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, width: 256 }}>
+                        {keys.map((key, i) => {
+                            if (key === '') return <div key={i} />;
+                            const isBackspace = key === '⌫';
+                            return (
+                                <button
+                                    key={i}
+                                    onClick={() => handleKey(key)}
+                                    style={{
+                                        height: 64, borderRadius: 16, border: '1px solid #c2c6d6',
+                                        background: isBackspace ? '#f0f4fc' : 'white',
+                                        color: isBackspace ? '#727785' : '#171c22',
+                                        fontSize: 22, fontWeight: 700,
+                                        fontFamily: 'inherit', cursor: 'pointer',
+                                        boxShadow: '0 3px 0 rgba(0,0,0,0.08)',
+                                        transition: 'box-shadow 0.1s, transform 0.1s',
+                                    }}
+                                    onMouseDown={e => { e.currentTarget.style.transform = 'translateY(2px)'; e.currentTarget.style.boxShadow = '0 1px 0 rgba(0,0,0,0.06)'; }}
+                                    onMouseUp={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 3px 0 rgba(0,0,0,0.08)'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 3px 0 rgba(0,0,0,0.08)'; }}
+                                    onTouchStart={e => { e.currentTarget.style.transform = 'translateY(2px)'; e.currentTarget.style.boxShadow = '0 1px 0 rgba(0,0,0,0.06)'; }}
+                                    onTouchEnd={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 3px 0 rgba(0,0,0,0.08)'; }}
+                                >
+                                    {key}
+                                </button>
+                            );
+                        })}
+                    </div>
+                    <button
+                        onClick={onCancel}
+                        style={{ marginTop: 24, background: 'none', border: 'none', fontSize: 14, fontWeight: 700, color: '#727785', cursor: 'pointer', fontFamily: 'inherit' }}
+                    >
+                        Cancel
+                    </button>
+                </>
+            )}
         </div>
     );
 }
@@ -1031,12 +1148,172 @@ function ChoreRow({ chore, onEdit, onDelete }) {
     );
 }
 
-function ParentSettings({ choreList, stats, onAddChore, onEditChore, onDeleteChore, onResetChores, devMode, onToggleDevMode, onResetAll }) {
+const BLANK_STORE_FORM = { name: '', cost: 5, emoji: '🎁', category: 'Reward' };
+
+function StoreItemForm({ initialData, onSave, onCancel }) {
+    const [form, setForm] = useState(initialData ? { ...initialData } : { ...BLANK_STORE_FORM });
+    const isEdit = !!initialData;
+    const set = (field, value) => setForm(f => ({ ...f, [field]: value }));
+    const valid = form.name.trim().length > 0 && form.emoji.trim().length > 0;
+
+    const inputStyle = {
+        width: '100%', boxSizing: 'border-box',
+        padding: '12px 14px', fontSize: 15, fontWeight: 600,
+        fontFamily: 'inherit', color: '#171c22',
+        background: 'white', border: '2px solid #c2c6d6',
+        borderRadius: 12, outline: 'none',
+        transition: 'border-color 0.15s',
+    };
+
+    return (
+        <div style={{ maxWidth: 560, margin: '0 auto', padding: '24px 20px 110px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+                <div>
+                    <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800, color: '#171c22', letterSpacing: '-0.02em' }}>
+                        {isEdit ? 'Edit Reward' : 'Add New Reward'}
+                    </h2>
+                    <p style={{ margin: '2px 0 0', fontSize: 13, fontWeight: 600, color: '#727785' }}>
+                        {isEdit ? 'Update the reward details below' : 'Fill in the details for the new reward'}
+                    </p>
+                </div>
+                <button
+                    onClick={onCancel}
+                    style={{ background: '#f0f4fc', border: 'none', borderRadius: 9999, width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 18, color: '#727785' }}
+                >✕</button>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr', gap: 12, marginBottom: 20 }}>
+                <div>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#424753', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Emoji</label>
+                    <input
+                        value={form.emoji}
+                        onChange={e => set('emoji', e.target.value)}
+                        placeholder="🎁"
+                        maxLength={4}
+                        style={{ ...inputStyle, textAlign: 'center', fontSize: 28, padding: '8px' }}
+                        onFocus={e => (e.target.style.borderColor = '#0969da')}
+                        onBlur={e => (e.target.style.borderColor = '#c2c6d6')}
+                    />
+                </div>
+                <div>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#424753', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Reward Name</label>
+                    <input
+                        value={form.name}
+                        onChange={e => set('name', e.target.value)}
+                        placeholder="e.g. Extra screen time"
+                        style={inputStyle}
+                        onFocus={e => (e.target.style.borderColor = '#0969da')}
+                        onBlur={e => (e.target.style.borderColor = '#c2c6d6')}
+                    />
+                </div>
+            </div>
+
+            <div style={{ marginBottom: 20 }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#424753', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Category</label>
+                <input
+                    value={form.category}
+                    onChange={e => set('category', e.target.value)}
+                    placeholder="e.g. Fun Time, Treat, Big Reward"
+                    style={inputStyle}
+                    onFocus={e => (e.target.style.borderColor = '#0969da')}
+                    onBlur={e => (e.target.style.borderColor = '#c2c6d6')}
+                />
+            </div>
+
+            <div style={{ marginBottom: 32 }}>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#424753', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Ticket Cost</label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <button
+                        onClick={() => form.cost > 1 && set('cost', form.cost - 1)}
+                        style={{ width: 44, height: 44, borderRadius: 12, border: '2px solid #c2c6d6', background: 'white', fontSize: 22, fontWeight: 700, cursor: 'pointer', color: '#424753', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 0 rgba(0,0,0,0.06)' }}
+                    >−</button>
+                    <div style={{ flex: 1, textAlign: 'center', background: '#d1f2d8', borderRadius: 12, padding: '12px 0', border: '2px solid #a8e6b8' }}>
+                        <span style={{ fontSize: 22, fontWeight: 800, color: '#005320' }}>{form.cost}</span>
+                        <span style={{ fontSize: 18, marginLeft: 4 }}>🎟️</span>
+                    </div>
+                    <button
+                        onClick={() => form.cost < 50 && set('cost', form.cost + 1)}
+                        style={{ width: 44, height: 44, borderRadius: 12, border: '2px solid #c2c6d6', background: 'white', fontSize: 22, fontWeight: 700, cursor: 'pointer', color: '#424753', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 0 rgba(0,0,0,0.06)' }}
+                    >+</button>
+                </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 12 }}>
+                <button onClick={onCancel} className="btn-3d-white" style={{ padding: '14px 0', fontSize: 14 }}>Cancel</button>
+                <button
+                    onClick={() => valid && onSave({ ...form, name: form.name.trim(), emoji: form.emoji.trim() })}
+                    className="btn-3d-primary"
+                    style={{ padding: '14px 0', fontSize: 14, opacity: valid ? 1 : 0.5, cursor: valid ? 'pointer' : 'not-allowed' }}
+                >
+                    {isEdit ? '✓ Save Changes' : '+ Add Reward'}
+                </button>
+            </div>
+        </div>
+    );
+}
+
+function StoreItemRow({ item, onEdit, onDelete }) {
+    return (
+        <div style={{
+            background: 'white', borderRadius: 14,
+            border: '1px solid #c2c6d6',
+            boxShadow: '0 3px 0 rgba(0,0,0,0.05)',
+            display: 'flex', overflow: 'hidden', alignItems: 'stretch',
+        }}>
+            <div style={{ width: 5, flexShrink: 0, background: '#2dba4e' }} />
+            <div style={{ flex: 1, padding: '12px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ fontSize: 24 }}>{item.emoji}</span>
+                <div>
+                    <p style={{ margin: '0 0 2px', fontSize: 14, fontWeight: 700, color: '#171c22' }}>{item.name}</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: '#727785', background: '#f0f4fc', borderRadius: 9999, padding: '2px 8px', border: '1px solid #c2c6d6' }}>{item.category}</span>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: '#005320' }}>🎟️ {item.cost}</span>
+                    </div>
+                </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '0 10px', flexShrink: 0 }}>
+                <button
+                    onClick={() => onEdit(item)}
+                    style={{ width: 34, height: 34, borderRadius: 10, border: '1px solid #c2c6d6', background: '#f0f4fc', cursor: 'pointer', fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    title="Edit"
+                >✏️</button>
+                <button
+                    onClick={() => { if (window.confirm(`Delete "${item.name}"?`)) onDelete(item.id); }}
+                    style={{ width: 34, height: 34, borderRadius: 10, border: '1px solid #fca5a5', background: '#fff0f0', cursor: 'pointer', fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    title="Delete"
+                >🗑️</button>
+            </div>
+        </div>
+    );
+}
+
+function ParentSettings({ choreList, stats, onAddChore, onEditChore, onDeleteChore, onResetChores, storeItemList, onAddStoreItem, onEditStoreItem, onDeleteStoreItem, devMode, onToggleDevMode, onResetAll, onPageChange }) {
     const [authenticated, setAuthenticated] = useState(false);
     const [formMode, setFormMode] = useState(null); // null | 'add' | { chore }
+    const [storeFormMode, setStoreFormMode] = useState(null); // null | 'add' | { item }
+    const [changingPin, setChangingPin] = useState(false);
 
     if (!authenticated) {
         return <PinEntry onSuccess={() => setAuthenticated(true)} />;
+    }
+
+    if (changingPin) {
+        return <ChangePinForm onSave={() => setChangingPin(false)} onCancel={() => setChangingPin(false)} />;
+    }
+
+    if (storeFormMode) {
+        const editingItem = storeFormMode === 'add' ? null : storeFormMode;
+        return (
+            <StoreItemForm
+                initialData={editingItem}
+                onSave={(data) => {
+                    if (editingItem) { onEditStoreItem(editingItem.id, data); }
+                    else { onAddStoreItem(data); }
+                    setStoreFormMode(null);
+                }}
+                onCancel={() => setStoreFormMode(null)}
+            />
+        );
     }
 
     if (formMode) {
@@ -1125,10 +1402,49 @@ function ParentSettings({ choreList, stats, onAddChore, onEditChore, onDeleteCho
                 })}
             </div>
 
+            {/* Manage Store */}
+            <div style={{ marginBottom: 28 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                    <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: '#424753', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Manage Store <span style={{ color: '#c2c6d6', fontWeight: 600 }}>({storeItemList.length})</span>
+                    </p>
+                    <button
+                        className="btn-3d-primary"
+                        onClick={() => setStoreFormMode('add')}
+                        style={{ padding: '8px 14px', fontSize: 13 }}
+                    >
+                        + Add Reward
+                    </button>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {storeItemList.map(item => (
+                        <StoreItemRow
+                            key={item.id}
+                            item={item}
+                            onEdit={i => setStoreFormMode(i)}
+                            onDelete={onDeleteStoreItem}
+                        />
+                    ))}
+                </div>
+            </div>
+
             {/* Security & Admin */}
             <div style={{ marginBottom: 20 }}>
                 <p style={{ margin: '0 0 12px', fontSize: 13, fontWeight: 700, color: '#424753', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Security & Admin</p>
                 <div style={{ background: 'white', borderRadius: 16, border: '1px solid #c2c6d6', boxShadow: '0 3px 0 rgba(0,0,0,0.05)', overflow: 'hidden' }}>
+                    {/* Change PIN */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px', borderBottom: '1px solid #eaeef6' }}>
+                        <div>
+                            <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: '#171c22' }}>Change PIN</p>
+                            <p style={{ margin: '2px 0 0', fontSize: 12, fontWeight: 600, color: '#727785' }}>Update your 4-digit parent PIN</p>
+                        </div>
+                        <button
+                            onClick={() => setChangingPin(true)}
+                            style={{ padding: '7px 12px', fontSize: 12, fontWeight: 700, background: '#f0f4fc', border: '1px solid #c2c6d6', borderRadius: 10, cursor: 'pointer', fontFamily: 'inherit', color: '#424753' }}
+                        >
+                            Change
+                        </button>
+                    </div>
                     {/* Dev mode toggle */}
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px', borderBottom: '1px solid #eaeef6' }}>
                         <div>
@@ -1203,7 +1519,7 @@ function ParentSettings({ choreList, stats, onAddChore, onEditChore, onDeleteCho
 
             {/* Sign out / lock */}
             <button
-                onClick={() => setAuthenticated(false)}
+                onClick={() => { setAuthenticated(false); onPageChange('dashboard'); }}
                 style={{ width: '100%', padding: '14px', background: 'none', border: '2px solid #c2c6d6', borderRadius: 14, cursor: 'pointer', fontFamily: 'inherit', fontSize: 14, fontWeight: 700, color: '#727785', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
             >
                 🔒 Lock Parent Settings
@@ -1343,6 +1659,7 @@ export default function App() {
                     <RewardsStore
                         availableTickets={appState.availableTickets}
                         onPurchase={appState.purchaseItem}
+                        storeItemList={appState.storeItemList}
                     />
                 );
             case 'progress':
@@ -1375,9 +1692,14 @@ export default function App() {
                         onEditChore={appState.editChore}
                         onDeleteChore={appState.deleteChore}
                         onResetChores={appState.resetChoresToDefault}
+                        storeItemList={appState.storeItemList}
+                        onAddStoreItem={appState.addStoreItem}
+                        onEditStoreItem={appState.editStoreItem}
+                        onDeleteStoreItem={appState.deleteStoreItem}
                         devMode={devMode}
                         onToggleDevMode={() => setDevMode(d => !d)}
                         onResetAll={appState.resetAll}
+                        onPageChange={appState.setCurrentPage}
                     />
                 );
             default:
