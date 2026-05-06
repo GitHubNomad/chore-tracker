@@ -27,7 +27,8 @@
       "Bash(Get-ChildItem -Path \"c:\\\\Chore Tracker\\\\GitRepos\\\\chore-tracker\" -Force)",
       "Bash(Select-Object Name, PSIsContainer)",
       "Bash(Sort-Object PSIsContainer -Descending)",
-      "Bash(xargs ls *)"
+      "Bash(xargs ls *)",
+      "PowerShell(Get-ChildItem \"c:\\\\Chore Tracker\\\\GitRepos\\\\chore-tracker\" | Where-Object { $_.Name -ne \"node_modules\" } | Select-Object Name, Attributes)"
     ]
   }
 }
