@@ -26,9 +26,9 @@
   "screenshots": [
     {
       "src": "store-screenshot-dashboard.png",
-      "sizes": "1024x576",
+      "sizes": "576x1024",
       "type": "image/png",
-      "form_factor": "wide",
+      "form_factor": "narrow",
       "label": "Dashboard – Turn Chores into Quests!"
     },
     {
