@@ -47,10 +47,19 @@ class RedactionJob(Base):
     filename = Column(String, nullable=False)
     original_path = Column(String, nullable=False)
     redacted_path = Column(String, nullable=True)
+    pdf_path = Column(String, nullable=True)
     pii_count = Column(Integer, default=0)
     pii_summary = Column(Text, default="")  # JSON
     created_at = Column(DateTime, default=datetime.utcnow)
     completed = Column(Boolean, default=False)
+
+
+class AppSetting(Base):
+    __tablename__ = "app_settings"
+
+    id = Column(Integer, primary_key=True, index=True)
+    key = Column(String, unique=True, nullable=False)
+    value = Column(Text, default="")
 
 
 def init_db():

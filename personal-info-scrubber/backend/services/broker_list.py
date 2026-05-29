@@ -16,7 +16,8 @@ BROKERS = [
         "requires_email_verify": True,
         "turnaround_days": 3,
         "instructions": "Search your name, copy the listing URL, paste it into the opt-out form, verify via email.",
-        "automated": False,
+        "automated": True,
+        "optout_email": "privacy@spokeo.com",
     },
     {
         "id": "whitepages",
@@ -42,7 +43,8 @@ BROKERS = [
         "requires_email_verify": True,
         "turnaround_days": 3,
         "instructions": "Search your name and state, select your listing, submit opt-out, confirm via email.",
-        "automated": False,
+        "automated": True,
+        "optout_email": "privacy@beenverified.com",
     },
     {
         "id": "intelius",
@@ -94,7 +96,7 @@ BROKERS = [
         "requires_email_verify": False,
         "turnaround_days": 1,
         "instructions": "Search your name, click 'Remove My Info' on your listing, complete the CAPTCHA.",
-        "automated": False,
+        "automated": True,
     },
     {
         "id": "truepeoplesearch",
@@ -107,7 +109,7 @@ BROKERS = [
         "requires_email_verify": False,
         "turnaround_days": 1,
         "instructions": "Find your listing, click 'Send Removal Request' and complete the CAPTCHA.",
-        "automated": False,
+        "automated": True,
     },
     {
         "id": "truthfinder",
@@ -160,6 +162,7 @@ BROKERS = [
         "turnaround_days": 14,
         "instructions": "Find your profile URL. Email optout@peekyou.com with your profile URL requesting removal.",
         "automated": False,
+        "optout_email": "optout@peekyou.com",
     },
     {
         "id": "zabasearch",
@@ -370,6 +373,7 @@ BROKERS = [
         "turnaround_days": 30,
         "instructions": "Email privacy@sterlingcheck.com with deletion request including your full name, DOB, and address.",
         "automated": False,
+        "optout_email": "privacy@sterlingcheck.com",
     },
     # --- Social / consumer ---
     {
@@ -461,7 +465,7 @@ BROKERS = [
         "requires_email_verify": False,
         "turnaround_days": 3,
         "instructions": "Search for your listing, click 'Opt Out', complete the CAPTCHA.",
-        "automated": False,
+        "automated": True,
     },
     {
         "id": "nuwber",

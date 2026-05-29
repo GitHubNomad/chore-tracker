@@ -45,6 +45,7 @@ async def upload_document(file: UploadFile = File(...), db: Session = Depends(ge
         filename=file.filename,
         original_path=original_path,
         redacted_path=result.get("redacted_path"),
+        pdf_path=result.get("pdf_path"),
         pii_count=result.get("pii_count", 0),
         pii_summary=json.dumps(result.get("summary", {})),
         completed=True,
@@ -60,6 +61,7 @@ async def upload_document(file: UploadFile = File(...), db: Session = Depends(ge
         "summary": result.get("summary", {}),
         "file_type": result.get("file_type"),
         "highlight_path": result.get("highlight_path"),
+        "has_pdf": result.get("pdf_path") is not None,
         "error": result.get("error"),
     }
 
@@ -105,6 +107,21 @@ def download_redacted(job_id: int, db: Session = Depends(get_db)):
     )
 
 
+@router.get("/{job_id}/download-pdf")
+def download_redacted_pdf(job_id: int, db: Session = Depends(get_db)):
+    job = db.query(RedactionJob).filter(RedactionJob.id == job_id).first()
+    if not job or not job.pdf_path:
+        raise HTTPException(status_code=404, detail="PDF not available for this job")
+    if not os.path.exists(job.pdf_path):
+        raise HTTPException(status_code=404, detail="PDF file not found on disk")
+    stem = Path(job.filename).stem
+    return FileResponse(
+        path=job.pdf_path,
+        media_type="application/pdf",
+        filename=f"{stem}_redacted.pdf",
+    )
+
+
 @router.get("/{job_id}/highlights")
 def get_highlights(job_id: int, db: Session = Depends(get_db)):
     job = db.query(RedactionJob).filter(RedactionJob.id == job_id).first()
@@ -128,6 +145,7 @@ def list_jobs(db: Session = Depends(get_db)):
             "summary": json.loads(j.pii_summary) if j.pii_summary else {},
             "created_at": j.created_at.isoformat() if j.created_at else None,
             "completed": j.completed,
+            "has_pdf": bool(j.pdf_path and os.path.exists(j.pdf_path)),
         }
         for j in jobs
     ]
@@ -138,7 +156,7 @@ def delete_job(job_id: int, db: Session = Depends(get_db)):
     job = db.query(RedactionJob).filter(RedactionJob.id == job_id).first()
     if not job:
         raise HTTPException(status_code=404, detail="Not found")
-    for path in [job.original_path, job.redacted_path]:
+    for path in [job.original_path, job.redacted_path, job.pdf_path]:
         if path and os.path.exists(path):
             os.remove(path)
     db.delete(job)

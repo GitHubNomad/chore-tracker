@@ -18,25 +18,19 @@
       <span>Private &amp; local</span>
     </div>
     <nav>
-      <div class="nav-item" data-page="dashboard">
-        <span class="icon">📊</span> Dashboard
-      </div>
-      <div class="nav-item" data-page="profile">
-        <span class="icon">👤</span> My Profile
-      </div>
-      <div class="nav-item" data-page="brokers">
-        <span class="icon">🗃</span> Data Brokers
-      </div>
-      <div class="nav-item" data-page="documents">
-        <span class="icon">📄</span> Documents
-      </div>
+      <div class="nav-item" data-page="dashboard"><span class="icon">📊</span> Dashboard</div>
+      <div class="nav-item" data-page="profile"><span class="icon">👤</span> My Profile</div>
+      <div class="nav-item" data-page="brokers"><span class="icon">🗃</span> Data Brokers</div>
+      <div class="nav-item" data-page="documents"><span class="icon">📄</span> Documents</div>
+      <div class="nav-item" data-page="templates"><span class="icon">✉️</span> CCPA Templates</div>
+      <div class="nav-item" data-page="settings"><span class="icon">⚙️</span> Settings</div>
     </nav>
   </aside>
 
   <!-- Main -->
   <main class="main-content">
 
-    <!-- Dashboard -->
+    <!-- ===== DASHBOARD ===== -->
     <div id="page-dashboard" class="page hidden">
       <div class="page-header">
         <h2>Dashboard</h2>
@@ -44,39 +38,24 @@
       </div>
 
       <div class="stat-grid">
-        <div class="stat-card">
-          <div class="stat-number" id="dash-total">—</div>
-          <div class="stat-label">Total Brokers</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number text-success" id="dash-confirmed">—</div>
-          <div class="stat-label">Confirmed Removed</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number text-accent" id="dash-submitted">—</div>
-          <div class="stat-label">Requests Submitted</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number text-muted" id="dash-pending">—</div>
-          <div class="stat-label">Not Started</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number text-warning" id="dash-docs">—</div>
-          <div class="stat-label">Docs Scanned</div>
-        </div>
+        <div class="stat-card"><div class="stat-number" id="dash-total">—</div><div class="stat-label">Total Brokers</div></div>
+        <div class="stat-card"><div class="stat-number text-success" id="dash-confirmed">—</div><div class="stat-label">Confirmed Removed</div></div>
+        <div class="stat-card"><div class="stat-number text-accent" id="dash-submitted">—</div><div class="stat-label">Requests Submitted</div></div>
+        <div class="stat-card"><div class="stat-number text-muted" id="dash-pending">—</div><div class="stat-label">Not Started</div></div>
+        <div class="stat-card"><div class="stat-number text-warning" id="dash-docs">—</div><div class="stat-label">Docs Scanned</div></div>
       </div>
 
       <div class="card">
         <div class="card-header">
-          <div>
-            <div class="card-title">Overall Opt-out Progress</div>
-            <div class="card-subtitle">Submitted + Confirmed out of total brokers</div>
-          </div>
+          <div><div class="card-title">Overall Opt-out Progress</div><div class="card-subtitle">Submitted + Confirmed out of total brokers</div></div>
           <span id="dash-progress-pct" style="font-size:20px;font-weight:700">0%</span>
         </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="dash-progress-fill" style="width:0%"></div>
-        </div>
+        <div class="progress-bar"><div class="progress-fill" id="dash-progress-fill" style="width:0%"></div></div>
+      </div>
+
+      <div id="reminders-card" class="card hidden">
+        <div class="card-title" style="margin-bottom:12px">⏰ Needs Attention</div>
+        <div id="reminders-content"></div>
       </div>
 
       <div class="card">
@@ -86,105 +65,71 @@
 
       <div class="alert alert-info">
         <div>
-          <strong>How to use this tool:</strong><br>
-          1. Add your info in <strong>My Profile</strong> so documents are scanned for your specific details.<br>
-          2. Work through <strong>Data Brokers</strong> — click opt-out links, submit requests, and track status here.<br>
-          3. Use <strong>Documents</strong> to redact PII before sharing files.
+          <strong>How to use:</strong><br>
+          1. <strong>My Profile</strong> — save your name, addresses, phones, emails so scans and opt-outs use your real data.<br>
+          2. <strong>Data Brokers</strong> — click "Automate" to let Playwright fill opt-out forms, or open the opt-out link manually. Track status.<br>
+          3. <strong>Documents</strong> — upload a file or paste text; get a redacted TXT + PDF.<br>
+          4. <strong>CCPA Templates</strong> — generate pre-filled deletion/opt-out emails for any broker.<br>
+          5. <strong>Settings</strong> — configure email reminders so you're notified when it's time to re-check.
         </div>
       </div>
     </div>
 
-    <!-- Profile -->
+    <!-- ===== PROFILE ===== -->
     <div id="page-profile" class="page hidden">
-      <div class="page-header">
-        <h2>My Profile</h2>
-        <p>Your personal information used to personalize broker opt-outs and document scanning. Stored locally only.</p>
-      </div>
-
+      <div class="page-header"><h2>My Profile</h2><p>Stored locally only — never sent anywhere.</p></div>
       <div class="card">
-        <div class="alert alert-warning mb-16">
-          🔒 This data is stored only in the local SQLite database on your machine. It is never sent anywhere.
-        </div>
-
-        <div id="profile-saved-note" class="alert alert-success mb-16 hidden">
-          ✓ Profile saved
-        </div>
-
+        <div class="alert alert-warning mb-16">🔒 All data is stored in the local SQLite database on your machine only.</div>
+        <div id="profile-saved-note" class="alert alert-success mb-16 hidden">✓ Profile saved</div>
         <div class="form-group">
           <label class="form-label">Full Name *</label>
           <input type="text" id="profile-name" class="form-input" placeholder="Jane Marie Smith">
         </div>
-
         <div class="form-group">
           <label class="form-label">Aliases / Previous Names</label>
           <input type="text" id="profile-aliases" class="form-input" placeholder="Jane Doe, J. Smith (comma-separated)">
-          <div class="form-hint">Include maiden names, nicknames, or name variations brokers may have</div>
+          <div class="form-hint">Include maiden names, nicknames — brokers may use old names</div>
         </div>
-
         <div class="form-group">
           <label class="form-label">Addresses (past &amp; present)</label>
           <textarea id="profile-addresses" class="form-input" placeholder="123 Main St, Springfield IL 62701&#10;456 Oak Ave, Chicago IL 60601"></textarea>
-          <div class="form-hint">One per line. Include past addresses — brokers may have old ones</div>
+          <div class="form-hint">One per line. Include old addresses — brokers keep historical data</div>
         </div>
-
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Phone Numbers</label>
             <input type="text" id="profile-phones" class="form-input" placeholder="555-555-1234, 555-555-5678">
-            <div class="form-hint">Comma-separated. Include old numbers</div>
           </div>
           <div class="form-group">
             <label class="form-label">Email Addresses</label>
             <input type="text" id="profile-emails" class="form-input" placeholder="jane@example.com, old@email.com">
-            <div class="form-hint">Comma-separated</div>
           </div>
         </div>
-
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Date of Birth</label>
             <input type="text" id="profile-dob" class="form-input" placeholder="MM/DD/YYYY">
-            <div class="form-hint">Used for broker opt-out forms</div>
           </div>
           <div class="form-group">
             <label class="form-label">Last 4 of SSN</label>
             <input type="text" id="profile-ssn" class="form-input" placeholder="1234" maxlength="4">
-            <div class="form-hint">Some brokers require this for ID verification only</div>
+            <div class="form-hint">Used for ID verification on some opt-out forms only</div>
           </div>
         </div>
-
         <button id="profile-save-btn" class="btn btn-primary">Save Profile</button>
       </div>
     </div>
 
-    <!-- Brokers -->
+    <!-- ===== BROKERS ===== -->
     <div id="page-brokers" class="page hidden">
-      <div class="page-header">
-        <h2>Data Brokers</h2>
-        <p>Track your opt-out requests across 40+ known data broker and people-search sites</p>
-      </div>
+      <div class="page-header"><h2>Data Brokers</h2><p>Track opt-out requests across 40+ data broker and people-search sites</p></div>
 
       <div class="stat-grid" style="grid-template-columns:repeat(5,1fr)">
-        <div class="stat-card">
-          <div class="stat-number" id="bs-total">—</div>
-          <div class="stat-label">Total</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number text-muted" id="bs-not_started">—</div>
-          <div class="stat-label">Not Started</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number text-accent" id="bs-submitted">—</div>
-          <div class="stat-label">Submitted</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number text-success" id="bs-confirmed">—</div>
-          <div class="stat-label">Confirmed</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number text-danger" id="bs-failed">—</div>
-          <div class="stat-label">Failed</div>
-        </div>
+        <div class="stat-card"><div class="stat-number" id="bs-total">—</div><div class="stat-label">Total</div></div>
+        <div class="stat-card"><div class="stat-number text-muted" id="bs-not_started">—</div><div class="stat-label">Not Started</div></div>
+        <div class="stat-card"><div class="stat-number text-accent" id="bs-submitted">—</div><div class="stat-label">Submitted</div></div>
+        <div class="stat-card"><div class="stat-number text-success" id="bs-confirmed">—</div><div class="stat-label">Confirmed</div></div>
+        <div class="stat-card"><div class="stat-number text-danger" id="bs-failed">—</div><div class="stat-label">Failed</div></div>
       </div>
 
       <div class="card">
@@ -227,12 +172,9 @@
       </div>
     </div>
 
-    <!-- Documents -->
+    <!-- ===== DOCUMENTS ===== -->
     <div id="page-documents" class="page hidden">
-      <div class="page-header">
-        <h2>Document Scanner</h2>
-        <p>Upload files or paste text to automatically detect and redact personal information</p>
-      </div>
+      <div class="page-header"><h2>Document Scanner</h2><p>Detect and redact PII from files or text. Outputs redacted TXT + PDF.</p></div>
 
       <div class="tabs">
         <div class="tab active" onclick="switchDocTab('upload', this)">Upload File</div>
@@ -240,30 +182,26 @@
         <div class="tab" onclick="switchDocTab('history', this)">History</div>
       </div>
 
-      <!-- Upload tab -->
       <div id="doc-tab-upload">
         <div class="card">
           <div id="dropzone" class="dropzone">
             <div class="dropzone-icon">📂</div>
             <div class="dropzone-text">Drop a file here or click to browse</div>
-            <div class="dropzone-hint">Supports TXT, PDF, DOCX, XLSX · Max 20MB</div>
+            <div class="dropzone-hint">Supports TXT, PDF, DOCX, XLSX · Max 20MB · Outputs redacted TXT + PDF</div>
           </div>
           <input type="file" id="file-input" class="hidden" accept=".txt,.pdf,.docx,.doc,.xlsx,.xls,.csv">
         </div>
-
         <div id="upload-result"></div>
-
         <div id="highlight-title" class="section-title hidden">Original Text with PII Highlighted</div>
         <div id="highlight-viewer" class="highlight-viewer hidden"></div>
       </div>
 
-      <!-- Text tab -->
       <div id="doc-tab-text" class="hidden">
         <div class="card">
           <div class="scanner-layout">
             <div class="form-group">
               <label class="form-label">Input Text</label>
-              <textarea id="scan-input" class="form-input scanner-textarea" placeholder="Paste any text here — emails, bios, documents, cover letters..."></textarea>
+              <textarea id="scan-input" class="form-input scanner-textarea" placeholder="Paste any text here — emails, bios, documents..."></textarea>
             </div>
             <div class="form-group">
               <label class="form-label">Redacted Output</label>
@@ -278,12 +216,129 @@
         </div>
       </div>
 
-      <!-- History tab -->
       <div id="doc-tab-history" class="hidden">
         <div class="card">
           <div class="card-title" style="margin-bottom:12px">Scan History</div>
           <div id="job-history"></div>
         </div>
+      </div>
+    </div>
+
+    <!-- ===== TEMPLATES ===== -->
+    <div id="page-templates" class="page hidden">
+      <div class="page-header"><h2>CCPA / GDPR Email Templates</h2><p>Pre-filled privacy opt-out emails. Copy-paste or send directly via configured SMTP.</p></div>
+
+      <div class="alert alert-info mb-16">
+        💡 <strong>Tip:</strong> Select a broker to auto-fill the "To" address. Your profile data populates the body. You can edit before sending.
+      </div>
+
+      <div class="card" style="margin-bottom:20px">
+        <div style="display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap">
+          <div class="form-group" style="flex:1;min-width:200px;margin:0">
+            <label class="form-label">Template Type</label>
+            <select id="tmpl-select" class="form-input"></select>
+          </div>
+          <div class="form-group" style="flex:1;min-width:200px;margin:0">
+            <label class="form-label">Broker (optional — auto-fills "To")</label>
+            <select id="tmpl-broker-select" class="form-input">
+              <option value="">— Select broker —</option>
+            </select>
+          </div>
+          <button id="tmpl-generate-btn" class="btn btn-primary" style="height:36px">Generate ↓</button>
+        </div>
+      </div>
+
+      <div id="tmpl-result" class="hidden">
+        <div class="card">
+          <div class="form-group">
+            <label class="form-label">To</label>
+            <input type="email" id="tmpl-to" class="form-input" placeholder="privacy@broker.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Subject</label>
+            <input type="text" id="tmpl-subject" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Body</label>
+            <textarea id="tmpl-body" class="form-input" style="min-height:320px;font-family:monospace;font-size:13px"></textarea>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button id="tmpl-copy-btn" class="btn btn-secondary">📋 Copy Body</button>
+            <button id="tmpl-mailto-btn" class="btn btn-secondary">📧 Open in Email Client</button>
+            <button id="tmpl-send-btn" class="btn btn-primary">⚡ Send via SMTP</button>
+            <span id="tmpl-send-status" style="font-size:13px;color:var(--muted);align-self:center"></span>
+          </div>
+          <div class="alert alert-info mt-16" style="font-size:12px">
+            <strong>Note:</strong> "Send via SMTP" requires SMTP configured in Settings. Otherwise use "Open in Email Client" or "Copy Body".
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SETTINGS ===== -->
+    <div id="page-settings" class="page hidden">
+      <div class="page-header"><h2>Settings</h2><p>Email reminders and scheduler configuration</p></div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:4px">📧 Email / SMTP</div>
+        <div class="card-subtitle" style="margin-bottom:20px">Used for sending CCPA templates and daily reminders</div>
+
+        <div class="form-group">
+          <label class="form-label">SMTP Host</label>
+          <input type="text" id="set-smtp-host" class="form-input" placeholder="smtp.gmail.com">
+          <div class="form-hint">Gmail: smtp.gmail.com · Outlook: smtp-mail.outlook.com · iCloud: smtp.mail.me.com</div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Port</label>
+            <input type="number" id="set-smtp-port" class="form-input" placeholder="587" value="587">
+            <div class="form-hint">587 (TLS/STARTTLS) or 465 (SSL)</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Reminder Send-To Email</label>
+            <input type="email" id="set-reminder-email" class="form-input" placeholder="you@example.com">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">SMTP Username</label>
+            <input type="email" id="set-smtp-user" class="form-input" placeholder="you@gmail.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">SMTP Password / App Password</label>
+            <input type="password" id="set-smtp-pass" class="form-input" placeholder="••••••••">
+            <div class="form-hint">For Gmail, use an <a href="https://myaccount.google.com/apppasswords" target="_blank" style="color:var(--accent-hover)">App Password</a></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
+          <button id="set-save-btn" class="btn btn-primary">Save Settings</button>
+          <button id="set-test-btn" class="btn btn-secondary">Send Test Email</button>
+          <span id="set-test-status" style="font-size:13px;align-self:center"></span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:4px">⏰ Reminders</div>
+        <div class="card-subtitle" style="margin-bottom:20px">Scheduler sends a daily digest at 9 AM UTC when brokers need follow-up</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Enable Daily Reminders</label>
+            <select id="set-reminders-enabled" class="form-input">
+              <option value="false">Disabled</option>
+              <option value="true">Enabled</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Re-check Interval (days)</label>
+            <input type="number" id="set-recheck-days" class="form-input" placeholder="90" value="90">
+            <div class="form-hint">How often to re-verify confirmed removals (default: 90 days)</div>
+          </div>
+        </div>
+        <button id="set-save-reminders-btn" class="btn btn-primary">Save Reminder Settings</button>
+
+        <div class="section-title" style="margin-top:24px">Pending Reminders Right Now</div>
+        <div id="reminders-preview">Loading...</div>
       </div>
     </div>
 
@@ -296,7 +351,6 @@
     <div class="modal-title">Update Opt-out Status</div>
     <div class="modal-subtitle" id="modal-broker-name"></div>
     <input type="hidden" id="modal-broker-id">
-
     <div class="form-group">
       <label class="form-label">Status</label>
       <select id="modal-status-select" class="form-input">
@@ -307,15 +361,36 @@
         <option value="failed">Failed — opt-out rejected or broken</option>
       </select>
     </div>
-
     <div class="form-group">
       <label class="form-label">Notes (optional)</label>
       <textarea id="modal-notes" class="form-input" placeholder="e.g. Submitted 5/1/2026, confirmation email received"></textarea>
     </div>
-
     <div class="modal-footer">
       <button id="modal-cancel-btn" class="btn btn-secondary">Cancel</button>
       <button id="modal-save-btn" class="btn btn-primary">Save Status</button>
+    </div>
+  </div>
+</div>
+
+<!-- Automation modal -->
+<div id="automation-modal" class="modal-backdrop hidden">
+  <div class="modal">
+    <div class="modal-title">🤖 Browser Automation</div>
+    <div class="modal-subtitle" id="auto-modal-broker"></div>
+    <div id="auto-modal-info" class="alert alert-info" style="margin-bottom:16px">
+      Playwright will open a browser on your machine, navigate to the opt-out page, and fill in your form fields automatically.
+      You will need to complete any CAPTCHA in the browser window. Don't close the browser until done.
+    </div>
+    <div id="auto-task-status" class="hidden">
+      <div class="form-group">
+        <label class="form-label">Progress</label>
+        <div id="auto-log" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:12px;max-height:160px;overflow-y:auto;font-family:monospace;font-size:12px;line-height:1.7"></div>
+      </div>
+      <div id="auto-status-badge" style="margin-top:8px"></div>
+    </div>
+    <div class="modal-footer">
+      <button id="auto-cancel-btn" class="btn btn-secondary">Cancel</button>
+      <button id="auto-start-btn" class="btn btn-primary">▶ Start Automation</button>
     </div>
   </div>
 </div>

@@ -14,6 +14,9 @@ pip install --quiet -r requirements.txt
 # Download spaCy model (small English model for NER)
 python -m spacy download en_core_web_sm --quiet
 
+# Install Playwright browser (Chromium only, for automation)
+playwright install chromium
+
 echo ""
 echo "=== Setup complete! ==="
 echo "Run: ./run.sh"

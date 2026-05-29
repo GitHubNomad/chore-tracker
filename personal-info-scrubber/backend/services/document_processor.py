@@ -89,8 +89,24 @@ def process_document(
             "total": len(matches),
         }, f)
 
+    # Generate PDF version
+    pdf_path = None
+    try:
+        from .pdf_generator import generate_redacted_pdf
+        pdf_path = os.path.join(output_dir, f"{base}_redacted.pdf")
+        generate_redacted_pdf(
+            redacted_text=redacted,
+            output_path=pdf_path,
+            original_filename=Path(file_path).name,
+            pii_count=len(matches),
+            summary=summary,
+        )
+    except Exception as e:
+        pdf_path = None
+
     return {
         "redacted_path": out_path,
+        "pdf_path": pdf_path,
         "highlight_path": highlight_path,
         "pii_count": len(matches),
         "summary": summary,

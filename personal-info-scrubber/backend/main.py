@@ -9,6 +9,10 @@ from fastapi.responses import FileResponse
 
 from database import init_db
 from routers import profile, brokers, documents
+from routers.automation_router import router as automation_router
+from routers.settings_router import router as settings_router
+from routers.templates_router import router as templates_router
+from services.scheduler import start_scheduler, stop_scheduler
 
 app = FastAPI(title="Personal Info Scrubber", version="1.0.0")
 
@@ -22,6 +26,9 @@ app.add_middleware(
 app.include_router(profile.router)
 app.include_router(brokers.router)
 app.include_router(documents.router)
+app.include_router(automation_router)
+app.include_router(settings_router)
+app.include_router(templates_router)
 
 FRONTEND_DIR = os.path.join(os.path.dirname(__file__), "..", "frontend")
 
@@ -43,6 +50,12 @@ if os.path.exists(FRONTEND_DIR):
 @app.on_event("startup")
 def startup():
     init_db()
+    start_scheduler()
+
+
+@app.on_event("shutdown")
+def shutdown():
+    stop_scheduler()
 
 
 @app.get("/api/health")
