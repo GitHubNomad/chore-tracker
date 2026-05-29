@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Info Scrubber</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <h1>🔒 PII Scrubber</h1>
+      <span>Private &amp; local</span>
+    </div>
+    <nav>
+      <div class="nav-item" data-page="dashboard">
+        <span class="icon">📊</span> Dashboard
+      </div>
+      <div class="nav-item" data-page="profile">
+        <span class="icon">👤</span> My Profile
+      </div>
+      <div class="nav-item" data-page="brokers">
+        <span class="icon">🗃</span> Data Brokers
+      </div>
+      <div class="nav-item" data-page="documents">
+        <span class="icon">📄</span> Documents
+      </div>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content">
+
+    <!-- Dashboard -->
+    <div id="page-dashboard" class="page hidden">
+      <div class="page-header">
+        <h2>Dashboard</h2>
+        <p>Your privacy removal progress at a glance</p>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-number" id="dash-total">—</div>
+          <div class="stat-label">Total Brokers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number text-success" id="dash-confirmed">—</div>
+          <div class="stat-label">Confirmed Removed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number text-accent" id="dash-submitted">—</div>
+          <div class="stat-label">Requests Submitted</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number text-muted" id="dash-pending">—</div>
+          <div class="stat-label">Not Started</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number text-warning" id="dash-docs">—</div>
+          <div class="stat-label">Docs Scanned</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Overall Opt-out Progress</div>
+            <div class="card-subtitle">Submitted + Confirmed out of total brokers</div>
+          </div>
+          <span id="dash-progress-pct" style="font-size:20px;font-weight:700">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="dash-progress-fill" style="width:0%"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px">Recent Activity</div>
+        <div id="recent-activity"></div>
+      </div>
+
+      <div class="alert alert-info">
+        <div>
+          <strong>How to use this tool:</strong><br>
+          1. Add your info in <strong>My Profile</strong> so documents are scanned for your specific details.<br>
+          2. Work through <strong>Data Brokers</strong> — click opt-out links, submit requests, and track status here.<br>
+          3. Use <strong>Documents</strong> to redact PII before sharing files.
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile -->
+    <div id="page-profile" class="page hidden">
+      <div class="page-header">
+        <h2>My Profile</h2>
+        <p>Your personal information used to personalize broker opt-outs and document scanning. Stored locally only.</p>
+      </div>
+
+      <div class="card">
+        <div class="alert alert-warning mb-16">
+          🔒 This data is stored only in the local SQLite database on your machine. It is never sent anywhere.
+        </div>
+
+        <div id="profile-saved-note" class="alert alert-success mb-16 hidden">
+          ✓ Profile saved
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" id="profile-name" class="form-input" placeholder="Jane Marie Smith">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Aliases / Previous Names</label>
+          <input type="text" id="profile-aliases" class="form-input" placeholder="Jane Doe, J. Smith (comma-separated)">
+          <div class="form-hint">Include maiden names, nicknames, or name variations brokers may have</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Addresses (past &amp; present)</label>
+          <textarea id="profile-addresses" class="form-input" placeholder="123 Main St, Springfield IL 62701&#10;456 Oak Ave, Chicago IL 60601"></textarea>
+          <div class="form-hint">One per line. Include past addresses — brokers may have old ones</div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Phone Numbers</label>
+            <input type="text" id="profile-phones" class="form-input" placeholder="555-555-1234, 555-555-5678">
+            <div class="form-hint">Comma-separated. Include old numbers</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Addresses</label>
+            <input type="text" id="profile-emails" class="form-input" placeholder="jane@example.com, old@email.com">
+            <div class="form-hint">Comma-separated</div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Date of Birth</label>
+            <input type="text" id="profile-dob" class="form-input" placeholder="MM/DD/YYYY">
+            <div class="form-hint">Used for broker opt-out forms</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last 4 of SSN</label>
+            <input type="text" id="profile-ssn" class="form-input" placeholder="1234" maxlength="4">
+            <div class="form-hint">Some brokers require this for ID verification only</div>
+          </div>
+        </div>
+
+        <button id="profile-save-btn" class="btn btn-primary">Save Profile</button>
+      </div>
+    </div>
+
+    <!-- Brokers -->
+    <div id="page-brokers" class="page hidden">
+      <div class="page-header">
+        <h2>Data Brokers</h2>
+        <p>Track your opt-out requests across 40+ known data broker and people-search sites</p>
+      </div>
+
+      <div class="stat-grid" style="grid-template-columns:repeat(5,1fr)">
+        <div class="stat-card">
+          <div class="stat-number" id="bs-total">—</div>
+          <div class="stat-label">Total</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number text-muted" id="bs-not_started">—</div>
+          <div class="stat-label">Not Started</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number text-accent" id="bs-submitted">—</div>
+          <div class="stat-label">Submitted</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number text-success" id="bs-confirmed">—</div>
+          <div class="stat-label">Confirmed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number text-danger" id="bs-failed">—</div>
+          <div class="stat-label">Failed</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="filter-bar">
+          <input type="text" id="broker-search" class="search-input" placeholder="Search brokers...">
+          <select id="broker-cat-filter" class="filter-select">
+            <option value="">All Categories</option>
+            <option value="people_search">People-Search</option>
+            <option value="data_aggregator">Data Aggregators</option>
+            <option value="background_check">Background Checks</option>
+            <option value="public_records">Public Records</option>
+          </select>
+          <select id="broker-status-filter" class="filter-select">
+            <option value="">All Statuses</option>
+            <option value="not_started">Not Started</option>
+            <option value="submitted">Submitted</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="failed">Failed</option>
+            <option value="monitoring">Monitoring</option>
+          </select>
+          <button id="reset-all-btn" class="btn btn-danger btn-sm">Reset All</button>
+        </div>
+
+        <div style="overflow-x:auto">
+          <table class="broker-table">
+            <thead>
+              <tr>
+                <th>Broker</th>
+                <th>Difficulty</th>
+                <th>Status</th>
+                <th>Timeline</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="broker-tbody">
+              <tr><td colspan="5" style="text-align:center;padding:32px;color:var(--muted)">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Documents -->
+    <div id="page-documents" class="page hidden">
+      <div class="page-header">
+        <h2>Document Scanner</h2>
+        <p>Upload files or paste text to automatically detect and redact personal information</p>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active" onclick="switchDocTab('upload', this)">Upload File</div>
+        <div class="tab" onclick="switchDocTab('text', this)">Paste Text</div>
+        <div class="tab" onclick="switchDocTab('history', this)">History</div>
+      </div>
+
+      <!-- Upload tab -->
+      <div id="doc-tab-upload">
+        <div class="card">
+          <div id="dropzone" class="dropzone">
+            <div class="dropzone-icon">📂</div>
+            <div class="dropzone-text">Drop a file here or click to browse</div>
+            <div class="dropzone-hint">Supports TXT, PDF, DOCX, XLSX · Max 20MB</div>
+          </div>
+          <input type="file" id="file-input" class="hidden" accept=".txt,.pdf,.docx,.doc,.xlsx,.xls,.csv">
+        </div>
+
+        <div id="upload-result"></div>
+
+        <div id="highlight-title" class="section-title hidden">Original Text with PII Highlighted</div>
+        <div id="highlight-viewer" class="highlight-viewer hidden"></div>
+      </div>
+
+      <!-- Text tab -->
+      <div id="doc-tab-text" class="hidden">
+        <div class="card">
+          <div class="scanner-layout">
+            <div class="form-group">
+              <label class="form-label">Input Text</label>
+              <textarea id="scan-input" class="form-input scanner-textarea" placeholder="Paste any text here — emails, bios, documents, cover letters..."></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Redacted Output</label>
+              <textarea id="scan-output" class="form-input scanner-textarea" placeholder="Redacted text will appear here..." readonly></textarea>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:8px">
+            <button id="scan-btn" class="btn btn-primary">🔍 Scan &amp; Redact</button>
+            <button id="copy-redacted-btn" class="btn btn-secondary">Copy Redacted</button>
+          </div>
+          <div id="scan-summary" style="margin-top:16px"></div>
+        </div>
+      </div>
+
+      <!-- History tab -->
+      <div id="doc-tab-history" class="hidden">
+        <div class="card">
+          <div class="card-title" style="margin-bottom:12px">Scan History</div>
+          <div id="job-history"></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Broker status modal -->
+<div id="broker-modal" class="modal-backdrop hidden">
+  <div class="modal">
+    <div class="modal-title">Update Opt-out Status</div>
+    <div class="modal-subtitle" id="modal-broker-name"></div>
+    <input type="hidden" id="modal-broker-id">
+
+    <div class="form-group">
+      <label class="form-label">Status</label>
+      <select id="modal-status-select" class="form-input">
+        <option value="not_started">Not Started</option>
+        <option value="submitted">Submitted — request sent, awaiting confirmation</option>
+        <option value="confirmed">Confirmed — removal verified</option>
+        <option value="monitoring">Monitoring — checking for re-appearance</option>
+        <option value="failed">Failed — opt-out rejected or broken</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Notes (optional)</label>
+      <textarea id="modal-notes" class="form-input" placeholder="e.g. Submitted 5/1/2026, confirmation email received"></textarea>
+    </div>
+
+    <div class="modal-footer">
+      <button id="modal-cancel-btn" class="btn btn-secondary">Cancel</button>
+      <button id="modal-save-btn" class="btn btn-primary">Save Status</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+<script>
+function switchDocTab(tab, el) {
+  document.querySelectorAll('[id^="doc-tab-"]').forEach(t => t.classList.add('hidden'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('doc-tab-' + tab).classList.remove('hidden');
+  el.classList.add('active');
+  if (tab === 'history') loadDocuments();
+}
+</script>
+</body>
+</html>
