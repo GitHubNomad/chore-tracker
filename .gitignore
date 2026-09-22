@@ -1,1 +1,8 @@
 node_modules
+
+# Credentials (service account keys)
+credentials/
+
+# Android TWA build output
+build/io.github.githubnomad.twa.zip
+build/io.github.githubnomad.twa/

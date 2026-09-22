@@ -5,6 +5,18 @@
   "description": "A gamified chore tracker for kids. Complete quests, earn tickets, and redeem rewards!",
   "icons": [
     {
+      "src": "icon-512-actual.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512-actual.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
       "src": "icon-512.png",
       "sizes": "1024x1024",
       "type": "image/png",
