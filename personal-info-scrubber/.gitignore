@@ -1,7 +1,0 @@
-backend/.venv/
-backend/scrubber.db
-backend/uploads/
-__pycache__/
-*.pyc
-*.pyo
-.DS_Store
